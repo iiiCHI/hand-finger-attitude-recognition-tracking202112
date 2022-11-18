@@ -1,3 +1,8 @@
+%% 文件说明
+% 文件主要为保存原始数据
+% 展示并输出融合约束的卡尔曼滤波系统的关节姿态/并不保存
+% 每个关节取一千条数据，针对不同的关节，进行0，30，60倾斜角下，0-90°的关节弯曲测试
+
 %% 对得到的数据进行约束求解；
 
 % addpath('quaternion_library');      % include quaternion library
@@ -221,7 +226,7 @@ grid;
 axis equal;
 axis([-2 2 -2 2 -2 2]);
 Hha1 = animatedline('DisplayName', 'hand_1', 'Color', 'b', 'LineWidth', 4, 'Marker', 'd', 'MarkerSize', 9);
-Hhi1 = animatedline('DisplayName', 'index_1', 'Color', 'r', 'LineWidth', 4, 'Marker', 'd', 'MarkerSize', 9);
+Hhi1 = animatedline('DisplayName', 'index_1', 'Color', 'r', 'LineWidth', 4, 'Marker', 'd', 'MarkerSize', 9); 
 Hhi2 = animatedline('DisplayName', 'index_2', 'Color', 'g', 'LineWidth', 4, 'Marker', 'd', 'MarkerSize', 9);
 Hha2 = animatedline('DisplayName', 'hand_2', 'Color', 'b', 'LineWidth', 4, 'Marker', 'd', 'MarkerSize', 9);
 Hhm1 = animatedline('DisplayName', 'middle_1', 'Color', 'r', 'LineWidth', 4, 'Marker', 'd', 'MarkerSize', 9);
@@ -241,7 +246,8 @@ delay = .000001;
 
 %% 串口参数设置
 serialPort = 'COM3';   %串口号，根据设备实际连接
-s = serial(serialPort, 'BaudRate', 115200);
+% s = serial(serialPort, 'BaudRate', 115200);
+s = serial(serialPort, 'BaudRate', 512000);
 
 % s.BytesAvailableFcnMode='byte';  % 串口设置
 s.InputBufferSize=4096;
@@ -369,10 +375,12 @@ while true
         Hand_posture(5*4-3:5*4) = Func_getJointPosture(X_k,6,5);%食指内关节
         Hand_posture(6*4-3:6*4) = Func_getJointPosture(X_k,7,8);%中指外关节
         Hand_posture(7*4-3:7*4) = Func_getJointPosture(X_k,6,7);%中指内关节
-        %% 简约三指构型可视化
-        Func_ShowHand(X_k',ha1,hi1,hi2,ha2,hm1,hm2,ht0,ht1,ht2)
-        %% 无约束可视化
-        Func_ShowHand(Unconstrained_X_k',Hha1,Hhi1,Hhi2,Hha2,Hhm1,Hhm2,Hht0,Hht1,Hht2)
+        if mod(Dis_Count,2)==0 
+            %% 简约三指构型可视化
+            Func_ShowHand(X_k',ha1,hi1,hi2,ha2,hm1,hm2,ht0,ht1,ht2)
+            %% 无约束可视化
+            Func_ShowHand(Unconstrained_X_k',Hha1,Hhi1,Hhi2,Hha2,Hhm1,Hhm2,Hht0,Hht1,Hht2)
+        end
         %% 朴素曲线可视化
 % %         for N=1:7
 % %             iplot_q(Hand_posture(4*N-3:4*N)', hx(N),hy(N),hz(N));

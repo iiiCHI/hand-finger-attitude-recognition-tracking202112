@@ -15,18 +15,23 @@ function [c,ceq] = Func_getHandJointConstraints(X)
 ceq = [ Get_q3(X,2,1);
         Get_q3(X,5,4);
         Get_q3(X,7,8);
-        % 上是外关节Q3
+        % 上是三指外关节Q3
         Get_q4(X,2,1);
         Get_q4(X,5,4);
         Get_q4(X,7,8);        
-        % 上是外关节Q4
-        Get_q3(X,6,5);
-        Get_q3(X,6,7); 
-        % 上是食指中指内关节Q3
+        % 上是三指外关节Q4        
+%         Get_q3(X,6,5);
+%         Get_q3(X,6,7); 
+%         Get_q3(X,3,2); 
+        %以上是各个关节旋转角
         ];
         %% 取符号
-signal = [sign(Get_q1(X,2,1));sign(Get_q1(X,5,4));sign(Get_q1(X,7,8));sign(Get_q1(X,6,5));sign(Get_q1(X,6,7))];
-c = [  - Get_q2(X,2,1) * signal(1);
+signal = [sign(Get_q1(X,2,1));sign(Get_q1(X,5,4));sign(Get_q1(X,7,8));sign(Get_q1(X,6,5));sign(Get_q1(X,6,7));sign(Get_q1(X,3,2))];
+c = [         
+       - Get_q2(X,3,2) * signal(6);
+       Get_q2(X,3,2) * signal(6) - sin(deg2rad(75/2)) ;
+        %拇指内关节
+       - Get_q2(X,2,1) * signal(1) + sin(deg2rad(-5/2));
        Get_q2(X,2,1) * signal(1) - sin(deg2rad(75/2)) ;
        %拇指外关节
        - Get_q2(X,5,4) * signal(2);
@@ -41,13 +46,27 @@ c = [  - Get_q2(X,2,1) * signal(1);
        - Get_q2(X,6,7) * signal(5) + sin(deg2rad(-30/2));
        Get_q2(X,6,7) * signal(5) - sin(deg2rad(90/2));          
        %中指内关节 弯曲
-       - Get_q4(X,6,5) * signal(4);
-       Get_q4(X,6,5) * signal(4) - sin(deg2rad(60/2));        
+%        - Get_q4(X,6,5) * signal(4);
+%        Get_q4(X,6,5) * signal(4) - sin(deg2rad(60/2));        
+%        - Get_q4(X,6,5) * signal(4) + sin(deg2rad(-30/2));
+%        Get_q4(X,6,5) * signal(4) - sin(deg2rad(30/2));   
+       abs(Get_q4(X,6,5)) - sin(deg2rad(30/2));  %左右30°
        %食指内关节 外展\内收    
-       - Get_q4(X,6,7) * signal(5);
-       Get_q4(X,6,7) * signal(5) - sin(deg2rad(60/2));     
-       %中指内关节 外展\内收
-       
+%        - Get_q4(X,6,7) * signal(5);
+%        Get_q4(X,6,7) * signal(5) - sin(deg2rad(60/2));     
+%        - Get_q4(X,6,7) * signal(5) +  sin(deg2rad(-30/2));
+%        Get_q4(X,6,7) * signal(5) - sin(deg2rad(30/2));  
+       abs(Get_q4(X,6,7)) - sin(deg2rad(30/2));  
+       %中指内关节 外展\内收Q4       
+       abs(Get_q4(X,3,2)) - sin(deg2rad(45/2)) ;
+       %拇指外展内收
+        abs(Get_q3(X,6,5)) - 0.0499502112523148;%一定是小于30°的
+        abs(Get_q3(X,6,7)) - 0.0499502112523148; 
+        abs(Get_q3(X,3,2)) - 0.0315065771780789; 
+        % 上是食指中指拇指内关节Q3
+       %三指mcp的约束，三指内关节的q3约束
+%       90-30是0.183
+%       75-22.5是 0.119       
        ];
 
 end

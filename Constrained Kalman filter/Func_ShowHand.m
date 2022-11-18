@@ -1,6 +1,12 @@
 function Func_ShowHand(buffer,hx,hy,hz,h2,hm1,hm2,ht0,ht1,ht2)
+%% 函数说明
+% 主要思路：
+% 输入参数为：系统状态值，以及八个句柄
+% 工作：
+% 1. 将八个IMU姿态进行可视化输出
+
 %% 执行开始 预设
-    q_hand = buffer(6*4-3:6*4);
+    q_plam = buffer(6*4-3:6*4);
     q_i1 = buffer(4*4+1:5*4);
     q_i2 = buffer(3*4+1:4*4);
     q_m1 = buffer(6*4+1:7*4);
@@ -9,31 +15,35 @@ function Func_ShowHand(buffer,hx,hy,hz,h2,hm1,hm2,ht0,ht1,ht2)
     q_t1 = buffer(1*4+1:2*4);
     q_t2 = buffer(1:4);
     % Demo style: 1) tri-axis, or 2) individual vector, or 3) tri-axis + box
-    Hand_i = -[0.2;0.5;0]; 
-    Index_Finger_1 = -[0;0.5;0];
-    Index_Finger_2 = -[0;0.5;0];
+    Hand_i = -[0.2;0.5;0]*1.5; 
+    Index_Finger_1 = -[0;0.3;0]*1.5;
+    Index_Finger_2 = -[0;0.3;0]*1.5;
+%     Index_Finger_3 = -[0;0.3;0]*1.5;
     
-    Hand_m = -[-0.2;0.5;0]; 
-    Middle__Finger_1 = -[0;0.5;0];
-    Middle__Finger_2 = -[0;0.5;0];
+    Hand_m = -[-0.2;0.5;0]*1.5; 
+    Middle__Finger_1 = -[0;0.3;0]*1.5;
+    Middle__Finger_2 = -[0;0.3;0]*1.5;
+%     Middle__Finger_3 = -[0;0.3;0]*1.5;
     
-    Thumb_m = -[0.4;-0.1;-0.4];
-    Thumb_1 = -[0;0.5;0];
-    Thumb_2 = -[0;0.3;0];
-    Thumb_3 = -[0;0.3;0];
+%     Thumb_m = -[0.4;-0.1;-0.4]*1.5;
+    Thumb_m = -[0.3;-0.2;0.2]*1.5;
+    Thumb_1 = -[0;0.5;0]*1.5;
+    Thumb_2 = -[0;0.3;0]*1.5;
+    Thumb_3 = -[0;0.3;0]*1.5;
     %% 姿态变化
-%     Thumb_Finger_1 = [0.5;0;0];
+    % Thumb_Finger_1 = [0.5;0;0];
     % rotate the tri-axis
     % 食指
-    Hand_i = quatrotate(q_hand, Hand_i')';
+    Hand_i = quatrotate(q_plam, Hand_i')';
     Index_Finger_1 = quatrotate(q_i1, Index_Finger_1')' + Hand_i;
     Index_Finger_2 = quatrotate(q_i2, Index_Finger_2')' + Index_Finger_1;
+%     Index_Finger_3 = quatrotate(q_i2, Index_Finger_3')' + Index_Finger_2;
     %中指
-    Hand_m = quatrotate(q_hand, Hand_m')';
+    Hand_m = quatrotate(q_plam, Hand_m')';
     Middle__Finger_1 = quatrotate(q_m1, Middle__Finger_1')' + Hand_m;
     Middle__Finger_2 = quatrotate(q_m2, Middle__Finger_2')' + Middle__Finger_1;
     %% 拇指
-    Thumb_m = quatrotate(q_t0, Thumb_m')';
+    Thumb_m = quatrotate(q_plam, Thumb_m')';
     Thumb_1 = quatrotate(q_t0, Thumb_1')' + Thumb_m;
     Thumb_2 = quatrotate(q_t1, Thumb_2')' + Thumb_1;
     Thumb_3 = quatrotate(q_t2, Thumb_3')' + Thumb_2;

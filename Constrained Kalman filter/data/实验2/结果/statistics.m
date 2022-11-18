@@ -1,0 +1,101 @@
+%% 这个函数是为了处理数据，将计算所得数据读取进来，求得误差 针对误差进行假设检验。
+clear;clc;
+answer = zeros(6,4*7);
+answer_cons = zeros(6,4*7);
+for ReadFileNameId = 1:6
+    Hand_posture_uncons = xlsread("QuaternionResultId"+string(ReadFileNameId) + ".xls");
+    Hand_posture_cons = xlsread("QuaternionResultId"+string(ReadFileNameId) + ".xls","Sheet2");
+    answer(ReadFileNameId,:) = mean(abs(Hand_posture_uncons));
+    answer_cons(ReadFileNameId,:) = mean(abs(Hand_posture_cons));
+end
+% mtx是记录的数据分别是六个人的三指姿态，
+% 列表示人，行表示关节姿态，1-9行分别是
+% 拇指mcp关节的偏航角，拇指mcp关节弯曲角，拇指ip关节弯曲角，
+% 食指mcp关节的偏航角，食指mcp关节弯曲角，食指pip关节弯曲角，
+% 中指mcp关节的偏航角，中指mcp关节弯曲角，中指pip关节弯曲角
+% 第十行为其余姿态补充
+mtx = [0.2	0.62	1	6.5	4.7	2.3
+0.24	1.8	1.2	1	3.6	4.4
+10.9	64.7	17.2	29.9	24.2	44.8
+3.2	14.8	16.4	13.24	2	3.8
+30.9	32	29.4	45.8	38.4	29.4
+59.6	68.6	69	60.8	64	73.6
+13.62	4.3	15.4	16.2	5.8	21
+48.6	40.2	42.3	51.6	47	42.2
+68.72	76.4	81	71.5	66.4	78.8
+0 0 0 0 0 0];
+Thumb_pip = angle2quat(mtx(10,:),mtx(10,:),deg2rad(mtx(3,:)));%默认是ZYX，然后进去的角度是 yaw, pitch, roll 
+Index_pip = angle2quat(mtx(10,:),mtx(10,:),deg2rad(mtx(6,:)));
+Middle_pip = angle2quat(mtx(10,:),mtx(10,:),deg2rad(mtx(9,:)));
+Thumb_mcp = angle2quat(deg2rad(mtx(1,:)),mtx(10,:),deg2rad(mtx(2,:)));
+Index_mcp = angle2quat(deg2rad(mtx(4,:)),mtx(10,:),deg2rad(mtx(5,:)));
+Middle_mcp = angle2quat(deg2rad(mtx(7,:)),mtx(10,:),deg2rad(mtx(8,:)));
+standardPosture = [Thumb_pip,Thumb_mcp,Index_pip,Index_mcp,Middle_pip,Middle_mcp];% 
+clearvars -except standardPosture;
+
+%% 以下主要是做假设检验的，针对角度和四元数的四个值分别进行假设检验。主要是对各个关节进行假设检验。
+%% 数据导入与数据预处理
+ReadFileName_role = 'MeanAnswerId';
+% load('standardPosture');%这个是标准值
+ConsAnswer = zeros(120,24);%有约束结果，每个人20，共6个人，120*24
+UnconsAnswer = zeros(120,24);%无约束结果
+for i = 1:6 %这是六个人的
+    ReadFileName = ReadFileName_role + string(i) + '.xls';
+    mtx = xlsread(ReadFileName);%删掉前四列
+    mtx = mtx(:,5:end);
+    mtx = abs(mtx - standardPosture(i,:));%求出误差来得到的是这个人的误差
+    UnconsAnswer(i*20-19:i*20,:) = mtx(1:20,:);
+    ConsAnswer(i*20-19:i*20,:) = mtx(21:40,:);    
+end
+%% 累加四元数，作为该关节的整体误差。
+for i = 1:6 %因为是六个关节角
+    Cons(:,i) = sum(ConsAnswer(:,i*4-3:i*4),2);%融合约束
+    Uncons(:,i) = sum(UnconsAnswer(:,i*4-3:i*4),2);%无约束    
+end
+JointName = ["Thumb_pip";"Thumb_mcp";"Index_pip";"Index_mcp";"Middle_pip";"Middle_mcp"];
+%% 判断是否符合正态分布
+alpha = 0.05;
+for i = 1:6
+    A = Cons(:,i);
+    % 正态分布判断
+    [mu, sigma] = normfit(A);
+    [H_A,s_A] = kstest(A, [A, normcdf(A, mu, sigma)], alpha);
+    B = Uncons(:,i);
+    % 正态分布判断
+    [mu, sigma] = normfit(B);
+    [H_B,s_B] = kstest(B, [B, normcdf(B, mu, sigma)], alpha);
+    if H_A == 0
+        disp(["融合约束方法",JointName(i),"->  服从正态分布。",string(s_A)])
+    else
+        disp(["融合约束方法",JointName(i),"->不服从正态分布。",string(s_A)])
+    end
+    if H_B == 0
+        disp(['无约束的方法',JointName(i),'->  服从正态分布。',string(s_B)])
+    else
+        disp(['无约束的方法',JointName(i),'->不服从正态分布。',string(s_B)])
+    end
+end
+clearvars -except Cons Uncons JointName;
+%% 判断显著性差异的，前提是服从正态分布，备择假设是x比y的误差更小 ，用总体减去规定值然后再进行检验
+[h_var,p_var] = vartest2(Cons,Uncons);%这个是方差一致性检验。
+alpha = 0.05; % 显著性水平为0.05
+tail = 'left'; % 备择检验为：x检验 的总体均值小于 的总体均值的备择假设y。
+%     tail = 'both'; % 检验总体均值不相等的备择假设
+vartype = 'equal'; % 方差类型为等方差
+%     vartype = 'unequal'; % 方差类型为不限定等方差
+% [h_mean,p_mean] = ttest2(Error_angle(:,1+i),Error_angle(:,5+i),'Alpha',alpha,'Tail',tail,'Vartype',vartype,'Dim',1)
+[h_mean,p_mean,ci,stats] = ttest2(Cons,Uncons,'Alpha',alpha,'Tail',tail,'Vartype',vartype,'Dim',1);
+%     h=0是接受原假设，
+disp('拒绝原假设的关节为：')
+for i = 1:6
+    if h_mean(i) == 1
+        disp(JointName(i))
+    end
+end
+
+
+
+
+
+
+
