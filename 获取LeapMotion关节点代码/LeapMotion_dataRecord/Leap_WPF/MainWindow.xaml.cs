@@ -143,7 +143,6 @@ namespace Leap_WPF
             pinky_p2.x = 0; pinky_p2.y = 0; pinky_p2.z = 0;
             palm_p2.x = 0; palm_p2.y = 0; palm_p2.z = 0;
 
-
         }
         private void music_Ended(object sender, RoutedEventArgs e)
         {
@@ -171,24 +170,26 @@ namespace Leap_WPF
         public void OnImage(object sender, ImageEventArgs args)
         {
             if (args.image.IsComplete)
-            { 
+            {
                 Leap.Image image = args.image;
 
-                Bitmap bitmap = new Bitmap(image.Width, image.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-                //Bitmap bitmap = new Bitmap(640, 440, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-                ColorPalette grayscale = bitmap.Palette;
-                for (int i = 0; i < 256; i++)
-                {
-                    grayscale.Entries[i] = System.Drawing.Color.FromArgb((int)255, i, i, i);
-                }
-                bitmap.Palette = grayscale;
-                System.Drawing.Rectangle lockArea = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
-                BitmapData bitmapData = bitmap.LockBits(lockArea, ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-                byte[] rawImageData = image.Data;
-                System.Runtime.InteropServices.Marshal.Copy(rawImageData, 0, bitmapData.Scan0, image.Width * image.Height);
-                bitmap.UnlockBits(bitmapData);
+                //Bitmap bitmap = new Bitmap(image.Width, image.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                ////Bitmap bitmap = new Bitmap(640, 440, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                //ColorPalette grayscale = bitmap.Palette;
+                //for (int i = 0; i < 256; i++)
+                //{
+                //    grayscale.Entries[i] = System.Drawing.Color.FromArgb((int)255, i, i, i);
+                //}
+                //bitmap.Palette = grayscale;
+                //System.Drawing.Rectangle lockArea = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+                //BitmapData bitmapData = bitmap.LockBits(lockArea, ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                //byte[] rawImageData = image.Data;
+                //System.Runtime.InteropServices.Marshal.Copy(rawImageData, 0, bitmapData.Scan0, image.Width * image.Height);
+                //bitmap.UnlockBits(bitmapData);
 
-                IRimage.Source = Convert(bitmap);
+                BitmapSource bitmapSource = BitmapSource.Create(image.Width, image.Height, 96, 96, System.Windows.Media.PixelFormats.Gray8, null, image.Data, image.Width);
+
+                IRimage.Source = bitmapSource;// Convert(bitmap);
 
             }
 
@@ -242,14 +243,15 @@ namespace Leap_WPF
                         string fingerName = finger.Type.ToString();
 
                         // 获取手指的三个关节的姿态
-                        string mcpRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_METACARPAL).Rotation.ToString());
-                        string pipRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_PROXIMAL).Rotation.ToString());
-                        string dipRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_DISTAL).Rotation.ToString());
+                        //string mcpRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_METACARPAL).Rotation.ToString());
+                        string FirRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_PROXIMAL).Rotation.ToString());
+                        string SecRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_INTERMEDIATE).Rotation.ToString());
+                        string ThrRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_DISTAL).Rotation.ToString());
 
                         // 将姿态信息写入文件
                         if (isRecording)
                         {
-                            HandFingerJointPositionFileWriter.Write($"{fingerName},{mcpRotation},{pipRotation},{dipRotation},");
+                            HandFingerJointPositionFileWriter.Write($"{fingerName},{FirRotation},{SecRotation},{ThrRotation},");
                         }
                     }
                     // 将姿态信息写入文件

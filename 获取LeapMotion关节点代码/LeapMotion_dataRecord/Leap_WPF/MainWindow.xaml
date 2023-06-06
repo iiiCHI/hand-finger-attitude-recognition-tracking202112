@@ -5,7 +5,7 @@
         KeyDown="MainWindows_Keydown">
     <Grid>
         <Label Name="test" Content="基于LeapMotion的手势数据采集软件" FontSize="20" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="381"/>
-        <Image Name="IRimage" HorizontalAlignment="Left" Height="211" Margin="21,145,0,0" VerticalAlignment="Top" Width="523"/>
+        <Image Name="IRimage" HorizontalAlignment="Left" Height="251" Margin="45,126,0,0" VerticalAlignment="Top" Width="482" RenderTransformOrigin="0.5,0.5" Stretch="Fill"/>
         <Label Name="test1" Content="传感器红外图像：" FontSize="15" HorizontalAlignment="Left" Margin="209,85,0,0" VerticalAlignment="Top"/>
 
         <Label Name="show" Content="test" HorizontalAlignment="Left" Height="31" Margin="362,255,0,0" VerticalAlignment="Top" Width="342" Visibility="Hidden"/>
