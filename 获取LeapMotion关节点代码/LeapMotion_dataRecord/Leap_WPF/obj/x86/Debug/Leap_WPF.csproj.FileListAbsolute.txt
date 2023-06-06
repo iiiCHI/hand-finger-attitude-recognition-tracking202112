@@ -1,0 +1,54 @@
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap.dll
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\LeapCSharp.NET4.0.dll
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.exe.config
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.exe
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.pdb
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csprojAssemblyReference.cache
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\MainWindow.baml
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\MainWindow.g.cs
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\App.g.cs
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF_Content.g.cs
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF_MarkupCompile.cache
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.g.resources
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.Properties.Resources.resources
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.GenerateResource.cache
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.CoreCompileInputs.cache
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.CopyComplete
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.exe
+E:\Gesture Recognition\code\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.pdb
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap.dll
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\LeapCSharp.NET4.0.dll
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.exe.config
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.exe
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.pdb
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.AssemblyReference.cache
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\MainWindow.baml
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\MainWindow.g.cs
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\App.g.cs
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF_Content.g.cs
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF_MarkupCompile.cache
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.g.resources
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.Properties.Resources.resources
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.GenerateResource.cache
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.CoreCompileInputs.cache
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.CopyComplete
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.exe
+E:\研究生阶段文档\项目文档\Leepmotion\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.pdb
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap.dll
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\LeapCSharp.NET4.0.dll
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.exe.config
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.exe
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\bin\x86\Debug\Leap_WPF.pdb
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csprojAssemblyReference.cache
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\MainWindow.baml
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\MainWindow.g.cs
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\App.g.cs
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF_Content.g.cs
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF_MarkupCompile.cache
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.g.resources
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.Properties.Resources.resources
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.GenerateResource.cache
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.CoreCompileInputs.cache
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.csproj.CopyComplete
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.exe
+G:\myw\code\leapmotion开发文档\LeapMotion_dataRecord\Leap_WPF\obj\x86\Debug\Leap_WPF.pdb
