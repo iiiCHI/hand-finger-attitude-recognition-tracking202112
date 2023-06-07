@@ -17,7 +17,7 @@ using System.Threading;
 using System.Diagnostics;
 using Leap;
 using System.IO;
-
+using System.IO.Ports;
 
 namespace Leap_WPF
 {
@@ -98,6 +98,8 @@ namespace Leap_WPF
 
         int frameIndex = 0;
 
+        static SerialPort serialPort;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -142,6 +144,8 @@ namespace Leap_WPF
             ring_p2.x = 0; ring_p2.y = 0; ring_p2.z = 0;
             pinky_p2.x = 0; pinky_p2.y = 0; pinky_p2.z = 0;
             palm_p2.x = 0; palm_p2.y = 0; palm_p2.z = 0;
+
+            serialPort = new SerialPort("COM21", 115200, Parity.None, 8, StopBits.One);
 
         }
         private void music_Ended(object sender, RoutedEventArgs e)
@@ -251,12 +255,13 @@ namespace Leap_WPF
                         // 将姿态信息写入文件
                         if (isRecording)
                         {
-                            HandFingerJointPositionFileWriter.Write($"{fingerName},{FirRotation},{SecRotation},{ThrRotation},");
+                            //serialPort.Write($"{fingerName},{FirRotation},{SecRotation},{ThrRotation},");
+                            serialPort.Write($"{FirRotation},{SecRotation},{ThrRotation},");
                         }
                     }
                     // 将姿态信息写入文件
                     if (isRecording)
-                        HandFingerJointPositionFileWriter.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}");
+                        serialPort.WriteLine("");
                     
                 }
                 else
@@ -442,7 +447,8 @@ namespace Leap_WPF
                 //close
                 fileWriter1.Close();
                 fileWriter2.Close();
-
+                HandFingerJointPositionFileWriter.Close();
+                serialPort.Close();
                 sampleNum++;
                 if (sampleNum >= 20)
                 {
@@ -460,7 +466,7 @@ namespace Leap_WPF
                 captureBtn.Content = "点击完成采集";
                 captureBtn.Background = System.Windows.Media.Brushes.Green;
 
-                
+                serialPort.Open();
 
 
                 frameCount = 0;
