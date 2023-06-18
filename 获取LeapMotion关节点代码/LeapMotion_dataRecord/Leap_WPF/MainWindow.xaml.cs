@@ -18,6 +18,7 @@ using System.Diagnostics;
 using Leap;
 using System.IO;
 using System.IO.Ports;
+using Path = System.IO.Path;
 
 namespace Leap_WPF
 {
@@ -145,7 +146,12 @@ namespace Leap_WPF
             pinky_p2.x = 0; pinky_p2.y = 0; pinky_p2.z = 0;
             palm_p2.x = 0; palm_p2.y = 0; palm_p2.z = 0;
 
-            serialPort = new SerialPort("COM21", 115200, Parity.None, 8, StopBits.One);
+            serialPort = new SerialPort("COM21", 512000, Parity.None, 8, StopBits.One);
+            // 设置接收缓冲区大小为4096字节
+            serialPort.ReadBufferSize = 4096;
+
+            // 设置发送缓冲区大小为2048字节
+            serialPort.WriteBufferSize = 2048;
 
         }
         private void music_Ended(object sender, RoutedEventArgs e)
@@ -247,22 +253,23 @@ namespace Leap_WPF
                         string fingerName = finger.Type.ToString();
 
                         // 获取手指的三个关节的姿态
-                        //string mcpRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_METACARPAL).Rotation.ToString());
-                        string FirRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_PROXIMAL).Rotation.ToString());
-                        string SecRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_INTERMEDIATE).Rotation.ToString());
-                        string ThrRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_DISTAL).Rotation.ToString());
+                        string MetacarpalRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_METACARPAL).Rotation.ToString());
+                        string ProximalRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_PROXIMAL).Rotation.ToString());
+                        string IntermediateRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_INTERMEDIATE).Rotation.ToString());
+                        string DistalRotation = RemoveQuaternionBrackets(finger.Bone(Bone.BoneType.TYPE_DISTAL).Rotation.ToString());
 
                         // 将姿态信息写入文件
                         if (isRecording)
                         {
                             //serialPort.Write($"{fingerName},{FirRotation},{SecRotation},{ThrRotation},");
-                            serialPort.Write($"{FirRotation},{SecRotation},{ThrRotation},");
+                            //serialPort.Write($"{FirRotation},{SecRotation},{ThrRotation},");
+                            HandFingerJointPositionFileWriter.Write($"{MetacarpalRotation},{ProximalRotation},{IntermediateRotation},{DistalRotation},");
                         }
                     }
                     // 将姿态信息写入文件
                     if (isRecording)
-                        serialPort.WriteLine("");
-                    
+                        HandFingerJointPositionFileWriter.WriteLine("");
+                    //Thread.Sleep(20);
                 }
                 else
                 {
@@ -417,9 +424,6 @@ namespace Leap_WPF
                     ring_v1 = ring_v0;
                     pinky_v1 = pinky_v0;
                     palm_v1 = palm_v0;
-
-
-
                 }
                 else
                 {
@@ -428,8 +432,6 @@ namespace Leap_WPF
 
 
             }
-
-
             frameCount++;
 
             #endregion
@@ -442,8 +444,6 @@ namespace Leap_WPF
                 isRecording = false;
                 captureBtn.Content = "点击开始采集";
                 captureBtn.Background = System.Windows.Media.Brushes.White;
-
-
                 //close
                 fileWriter1.Close();
                 fileWriter2.Close();
@@ -473,14 +473,18 @@ namespace Leap_WPF
 
                 string fileName1 = "../../../DataSet/data1/" + "gesture" + gestureIndex.Text + "/" + "gesture" + gestureIndex.Text + "_subject" + subjetcIndex.Text + "_sample" + sampleIndex.Text + ".csv";
                 string fileName2 = "../../../DataSet/data2/" + "gesture" + gestureIndex.Text + "/" + "gesture" + gestureIndex.Text + "_subject" + subjetcIndex.Text + "_sample" + sampleIndex.Text + ".csv";
-
+                string filePath = "../../../../../DataSet/" + "HumanId" + gestureIndex.Text + "/" + "HumanId" + gestureIndex.Text + "GestureId" + subjetcIndex.Text + "/Times" + sampleIndex.Text + "data.csv";
+                string directoryPath = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
                 fileWriter1 = new StreamWriter(fileName1, true, Encoding.ASCII);
                 fileWriter2 = new StreamWriter(fileName2, true, Encoding.ASCII);
-                HandFingerJointPositionFileWriter = new StreamWriter("../../../DataSet/data1/data.csv", true, Encoding.ASCII);
+                HandFingerJointPositionFileWriter = new StreamWriter(filePath, true, Encoding.ASCII);
                 //write head
                 string info1 = "frameIndex,thumb_x,thumb_y,thumb_z,thumb_v,index_x,index_y,index_z,index_v,middle_x,middle_y,middle_z,middle_v,ring_x,ring_y,ring_z,ring_v,pinky_x,pinky_y,pinky_z,pinky_v,palm_x,palm_y,palm_z,palm_v,date_now" + "\r\n";
                 fileWriter1.Write(info1);
-
                 string info2 = "frameIndex,thumb_angle,thumb_angle_interval,thumb_v,index_angle,index_angle_interval,index_v,middle_angle,middle_interval,middle_v,ring_angle,ring_interval,ring_v,pinky_angle,pinky_interval,pinky_v,palm_angle,palm_interval,palm_v,date_now" + "\r\n";
                 fileWriter2.Write(info2);
             }
