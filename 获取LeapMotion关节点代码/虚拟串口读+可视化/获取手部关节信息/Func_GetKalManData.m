@@ -67,22 +67,22 @@ addpath('D:\MATLAB\WorkSpace\MaYongWei\无线传输代码\');
             end
             %% 计算所需要的7个姿态信息
             Hand_posture(1*4-3:1*4) = X_k(6*4-3:6*4);%手部姿态信息
-            Hand_posture(2*4-3:2*4) = Func_getJointPosture(X_k,2,1);%拇指外关节
-            Hand_posture(3*4-3:3*4) = Func_getJointPosture(X_k,3,2);%拇指内关节        
-            Hand_posture(4*4-3:4*4) = Func_getJointPosture(X_k,5,4);%食指外关节
-            Hand_posture(5*4-3:5*4) = Func_getJointPosture(X_k,6,5);%食指内关节
-            Hand_posture(6*4-3:6*4) = Func_getJointPosture(X_k,7,8);%中指外关节
-            Hand_posture(7*4-3:7*4) = Func_getJointPosture(X_k,6,7);%中指内关节
+            Hand_posture(2*4-3:2*4) = Func_getJointPosture(X_k,3,2);%拇指内关节    
+            Hand_posture(3*4-3:3*4) = Func_getJointPosture(X_k,2,1);%拇指外关节    
+            Hand_posture(4*4-3:4*4) = Func_getJointPosture(X_k,6,5);%食指内关节
+            Hand_posture(5*4-3:5*4) = Func_getJointPosture(X_k,5,4);%食指外关节
+            Hand_posture(6*4-3:6*4) = Func_getJointPosture(X_k,6,7);%中指内关节
+            Hand_posture(7*4-3:7*4) = Func_getJointPosture(X_k,7,8);%中指外关节
+            Hand_posture_ans(end+1,:) = Hand_posture;
             % 无约束的
             Unconstrained_Hand_posture(1*4-3:1*4) = Unconstrained_X_k(6*4-3:6*4);%手部姿态信息
-            Unconstrained_Hand_posture(2*4-3:2*4) = Func_getJointPosture(Unconstrained_X_k,2,1);%拇指外关节
-            Unconstrained_Hand_posture(3*4-3:3*4) = Func_getJointPosture(Unconstrained_X_k,3,2);%拇指内关节        
-            Unconstrained_Hand_posture(4*4-3:4*4) = Func_getJointPosture(Unconstrained_X_k,5,4);%食指外关节
-            Unconstrained_Hand_posture(5*4-3:5*4) = Func_getJointPosture(Unconstrained_X_k,6,5);%食指内关节
-            Unconstrained_Hand_posture(6*4-3:6*4) = Func_getJointPosture(Unconstrained_X_k,7,8);%中指外关节
-            Unconstrained_Hand_posture(7*4-3:7*4) = Func_getJointPosture(Unconstrained_X_k,6,7);%中指内关节
+            Unconstrained_Hand_posture(2*4-3:2*4) = Func_getJointPosture(Unconstrained_X_k,3,2);%拇指内关节      
+            Unconstrained_Hand_posture(3*4-3:3*4) = Func_getJointPosture(Unconstrained_X_k,2,1);%拇指外关节  
+            Unconstrained_Hand_posture(4*4-3:4*4) = Func_getJointPosture(Unconstrained_X_k,6,5);%食指内关节
+            Unconstrained_Hand_posture(5*4-3:5*4) = Func_getJointPosture(Unconstrained_X_k,5,4);%食指外关节
+            Unconstrained_Hand_posture(6*4-3:6*4) = Func_getJointPosture(Unconstrained_X_k,6,7);%中指内关节
+            Unconstrained_Hand_posture(7*4-3:7*4) = Func_getJointPosture(Unconstrained_X_k,7,8);%中指外关节
             Unconstrained_Hand_posture_ans(end+1,:) = Unconstrained_Hand_posture;
-            Hand_posture_ans(end+1,:) = Hand_posture;
     end
 end
 

@@ -9,7 +9,7 @@
         <Label Name="test1" Content="传感器红外图像：" FontSize="15" HorizontalAlignment="Left" Margin="209,85,0,0" VerticalAlignment="Top"/>
 
         <Label Name="show" Content="test" HorizontalAlignment="Left" Height="31" Margin="362,255,0,0" VerticalAlignment="Top" Width="342" Visibility="Hidden"/>
-        <Button Name="captureBtn" Content="点击开始采集" HorizontalAlignment="Left" Margin="616,306,0,0" VerticalAlignment="Top" Width="125" Height="42" FontSize="16" Click="captureBtn_Click"/>
+        <Button Name="captureBtn" Content="点击开始采集" HorizontalAlignment="Left" Margin="616,306,0,0" VerticalAlignment="Top" Width="125" Height="42" FontSize="16" Click="captureBtn_Click" KeyDown="captureBtn_KeyDown"/>
         <TextBox Name="subjetcIndex" HorizontalAlignment="Left" Height="29" Margin="711,105,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="59" FontSize="18"/>
         <Label Content="采集者编号：" HorizontalAlignment="Left" Height="31" Margin="544,105,0,0" VerticalAlignment="Top" Width="137" FontSize="18"/>
         <Label Content="手势编号：" HorizontalAlignment="Left" Height="31" Margin="544,141,0,0" VerticalAlignment="Top" Width="137" FontSize="18"/>

@@ -7,10 +7,18 @@ function HandPosture = Func_getHandPosture(HandFigAttitude,FigNum,JointNum)
 % 函数输出：
 % HandPosture，也就是所需的手部姿态。
 % 作者：马永伟 日期： 2023年6月7日
+% Metrx  = [0.5,-0.5,0.5,0.5];
 HandPosture = [];
 for i = 1:FigNum
     for j = 1:JointNum
-        HandPosture = [HandPosture,Func_getJointPostureAll(HandFigAttitude,(i-1)*4+(j+1),(i-1)*4+(j))];
+        jit = Func_getJointPostureAll(HandFigAttitude,(i-1)*4+(j+1),(i-1)*4+(j));
+        for k = 1:length(jit)
+            if jit(k,1)<0
+                jit(k,:) = jit(k,:)*-1;
+            end
+            %jit(k,:) = Func_crossProduct(Metrx,jit(k,:)); 
+        end
+        HandPosture = [HandPosture,jit];
     end
 end
 end

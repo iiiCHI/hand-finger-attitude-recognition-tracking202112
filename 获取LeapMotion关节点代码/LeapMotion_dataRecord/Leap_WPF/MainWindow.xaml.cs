@@ -457,7 +457,7 @@ namespace Leap_WPF
                 
                 }
 
-                sampleIndex.Text = sampleNum.ToString();
+                sampleIndex.Text = (int.Parse(sampleIndex.Text)+1) .ToString();
 
             }
             else //start record
@@ -473,7 +473,7 @@ namespace Leap_WPF
 
                 string fileName1 = "../../../DataSet/data1/" + "gesture" + gestureIndex.Text + "/" + "gesture" + gestureIndex.Text + "_subject" + subjetcIndex.Text + "_sample" + sampleIndex.Text + ".csv";
                 string fileName2 = "../../../DataSet/data2/" + "gesture" + gestureIndex.Text + "/" + "gesture" + gestureIndex.Text + "_subject" + subjetcIndex.Text + "_sample" + sampleIndex.Text + ".csv";
-                string filePath = "../../../../../DataSet/" + "HumanId" + gestureIndex.Text + "/" + "HumanId" + gestureIndex.Text + "GestureId" + subjetcIndex.Text + "/Times" + sampleIndex.Text + "data.csv";
+                string filePath = "../../../../../DataSet/" + "HumanId" + subjetcIndex.Text + "/" + "HumanId" + subjetcIndex.Text + "GestureId" + gestureIndex.Text + "/Times" + sampleIndex.Text + "data.csv";
                 string directoryPath = Path.GetDirectoryName(filePath);
                 if (!Directory.Exists(directoryPath))
                 {
@@ -502,9 +502,17 @@ namespace Leap_WPF
                 e.Handled = true;
                 //MessageBox.Show("请输入密码！");
                 captureBtn_Click(null,null);
-
+            }
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+                this.captureBtn_Click(sender, e);
             }
 
+        }
+
+        private void captureBtn_KeyDown(object sender, KeyEventArgs e)
+        {
         }
     }
     class SampleListener
