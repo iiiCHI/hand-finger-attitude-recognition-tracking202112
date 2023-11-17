@@ -1,0 +1,87 @@
+休息性震颤信号频带在4 Hz～6 Hz之间，动作性震颤信号频带在3.5 Hz～12 Hz之间。
+
+姿势性和动力性震颤通常发生在前臂和手部，频率范围为4-12赫兹，随着年龄的增长而减少。
+
+
+震动幅度 = 三轴和。
+
+运动 <2hz，噪声>25hz
+
+2.4震颤量化
+Txt 文件是在一台运行 Windows 7 Professional 32位的2.83 GHz Inter Core 2 Quad q9500机器上处理的。使用 Matlab 软件(版本7.11.0(R2010b) ; MathWorks，内蒂克，MA)对与四个临床任务相关的3 d 陀螺仪信号的片段进行离线后处理。内拥有属性痛患者的手颤抖一般是有节奏的运动，频率在4-12hz 之间(Benito-Leon 和 Louis，2006)。为了检测震颤的存在，我们分别分析了三个轴的角速度。陀螺仪数据使用10阶巴特沃斯高通滤波器(f 1 > 4 Hz)进行带通滤波，然后是10阶巴特沃斯低通滤波器(f 2 < 8 Hz)。根据先前的研究(Gallego et al。 ，2013; Zheng et al。 ，2017) ，前者减去了意识运动(< 3 Hz) ; 后者滤除了其他高频震颤，如直立性震颤或增强的生理性震颤(> 8 Hz)。
+震动强度是根据陀螺仪信号1 s 移动窗口的平方平均数(RMS)计算出来的。
+选择这个窗口大小是为了优化精度和时间分辨率之间的关系。
+强度量化参数: 平均强度，MI (°/s) : 三轴均方根值的平均值。
+这次地震的主要频率 FT (Hz)是用 Matlab 的 SPECTROGRAM 函数估计的，窗口大小为1 s，重叠率为90% 。
+
+
+
+参考【https://www.sciencedirect.com/science/article/pii/S1353802011001118#sec1】
+(1)检测并将震颤分类为姿势性或动力性，尽管存在随意运动伪影，
+(2)在标准化评估期间准确地评估震颤严重程度
+(3)在日常生活活动期间准确地评估震颤严重程度来证明持续家庭 ET 监测的可行性。
+
+
+以前，加速度计(体动记录仪) ，陀螺仪和肌电图(肌电图)已被广泛用于获得帕金森病(PD)和 ET 的震颤的定量测量[7] ，[11] ，[12] ，[13] ，[14]。肌电图活动与震颤分数有中等程度的相关性[15] ，[16] ，但加速度计[17]和陀螺仪[18]提供了更强的相关性。
+
+G. Mostile 莫斯蒂尔, J.P. Giuffrida 吉芙丽达, O.R. 手术室 Adam 亚当, A. 答: Davidson 戴维森, J. Jankovic 扬科维奇
+Correlation between Kinesia system assessments and clinical tremor scores in patients with essential tremor Kinesia 系统评估与原发性震颤患者临床震颤评分的相关性
+Mov Disord Mov 紊乱, 12 (2010), pp. ，pp1938-1943
+View article CrossRef Crossre f 交叉参考View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[8]
+E.D. 环境署 Louis 路易斯, K.J. Kj Wendt 温特, S.M. Albert 艾伯特, S.L. Pullman 普尔曼, Q. 问: Yu 于, H. Andrews 安德鲁斯
+Validity of a performance-based test of function in essential tremor 以原发性震颤表现为本的功能测试的有效性
+Arch Neurol Arch Neurol 拱形神经元, 7 (1999), pp. ，pp841-846
+ View PDF 
+This article is free to access.
+View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[9]
+E.D. 环境署 Louis 路易斯, L. Barnes 巴恩斯, K.J. Kj Wendt 温特, B. Ford 福特, M. Sangiorgio 桑乔治, S. 美国 Tabbal 塔布尔, et al. 等等
+A teaching videotape for the assessment of essential tremor 评估原发性震颤的教学录影带
+Mov Disord Mov 紊乱, 1 (2001), pp. ，pp89-93
+View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[10]
+S. 美国 Fahn 法恩, E. Tolosa 托洛萨, C. Marin 马琳
+Clinical rating scale for tremor 震颤临床评定量表
+Jankovic 扬科维奇, Tolosa 托洛萨 (Eds.) (编辑), Parkinson’s disease and movement disorders 帕金森病与运动障碍, Williams and Wilkins 威廉姆斯和威尔金斯, Baltimore 巴尔的摩 (1993), pp. ，pp271-280
+Google Scholar 谷歌学术搜索
+[11]
+K.E. Norman 诺曼, R. Edwards 爱德华兹, A. 答: Beuter 比特
+The measurement of tremor using a velocity transducer: comparison to simultaneous recordings using transducers of displacement, acceleration and muscle activity 使用速度传感器测量震颤: 与使用位移、加速度和肌肉活动传感器同时记录的比较
+J Neurosci Methods 神经科学方法, 1-2 (1999), pp. ，pp41-54
+View PDF 浏览 PDFView article 浏览文章View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[12]
+E.J. Van Someren 范 · 萨默伦, M.D. 医学博士 Pticek 普提切克, J.D. 法学博士 Speelman 斯皮尔曼, P.R. 公关 Schuurman 舒尔曼, R. Esselink Esselink 埃斯林克, D.F. D. f Swaab 斯瓦布
+New actigraph for long-term tremor recording 用于长期震颤记录的新型动作记录仪
+Mov Disord Mov 紊乱, 8 (2006), pp. ，pp1136-1143
+View article CrossRef Crossre f 交叉参考View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[13]
+J. Jankovic 扬科维奇, K. Schwartz 施瓦茨, W. Clemence 仁慈, A. 答: Aswad 阿斯瓦德, J. Mordaunt 莫多特
+A randomized, double-blind, placebo-controlled study to evaluate botulinum toxin type A in essential hand tremor A 型肉毒毒素治疗原发性手震颤的随机、双盲、安慰剂对照研究
+Mov Disord Mov 紊乱, 3 (1996), pp. ，pp250-256
+View article CrossRef Crossre f 交叉参考View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[14]
+D.E. Vaillancourt 维兰考特, M.M. Sturman 斯图曼, L. Verhagen Metman 作者: Verhagen Metman, R.A.E. Bakay 巴凯, D.M. Corcos 科克斯
+Deep brain stimulation of the VIM thalamic nucleus modifies several features of essential tremor VIM 丘脑核的深部脑刺激改变了原发性震颤的几个特征
+Neurology 神经病学, 7 (2003), pp. ，pp919-925
+View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[15]
+E.P. Lukhanina 卢卡尼娜, M.T. Kapoustina 卡普斯蒂娜, I.N. Karaban 卡拉班
+A quantitative surface electromyogram analysis for diagnosis and therapy control in Parkinson’s disease 定量表面肌电图分析在帕金森病诊断和治疗控制中的应用
+Parkinsonism Relat Disord 帕金森综合征相关疾病, 2 (2000), pp. ，pp77-86
+View PDF 浏览 PDFView article 浏览文章View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[16]
+S. 美国 Spieker 斯派克, A. 答: Boose 布斯, S. 美国 Breit 布莱特, J. Dichgans 狄更斯
+Long-term measurement of tremor 震颤的长期测量
+Mov Disord Mov 紊乱, 13 (Suppl. 3 供应商3) (1998), pp. ，pp81-84
+View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[17]
+E.J. Van Someren 范 · 萨默伦, B.F. 最好的朋友 Vonk 冯克, W.A. 华盛顿州 Thijssen 蒂森, J.D. 法学博士 Speelman 斯皮尔曼, P.R. 公关 Schuurman 舒尔曼, M. Mirmiran 米尔米兰, et al. 等等
+A new actigraph for long-term registration of the duration and intensity of tremor and movement 用于长期记录震颤和运动持续时间和强度的新型活动记录仪
+IEEE Trans Biomed Eng 生物医学工程学会, 3 (1998), pp. ，pp386-395
+View in Scopus Scopus 中的视角Google Scholar 谷歌学术搜索
+[18]
+A. 答: Salarian 萨拉瑞恩, H. Russmann 拉斯曼, C. Wider 再宽一点, P.R. 公关 Burkhard 伯克哈德, F.J. Vingerhoets Vingerhoets 酒鬼, K. Aminian 阿米尼安
+Quantification of tremor and bradykinesia in Parkinson’s disease using a novel ambulatory monitoring system 新型动态监测系统对帕金森病震颤和运动迟缓的定量研究
+IEEE Trans Biomed Eng 生物医学工程学会, 2 (2007), pp. ，pp313-322
+View in Scopus Scopus 中的视角Google Scholar
