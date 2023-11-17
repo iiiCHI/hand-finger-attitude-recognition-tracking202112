@@ -1,0 +1,8 @@
+# uid gender age experience-display experience-gesture experience-cross-device
+1 Male 22 Daily Right hand
+2 Female 23 Monthly Right hand
+3 Male 25 Monthly Right hand
+4 Male 23 Weekly Right hand
+5 Female 24 Monthly Right hand
+6 Male 25 Yearly Left hand
+7 Male 22 Never Right hand
