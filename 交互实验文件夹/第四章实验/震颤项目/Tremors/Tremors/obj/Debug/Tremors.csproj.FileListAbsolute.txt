@@ -1,0 +1,10 @@
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\bin\Debug\Tremors.exe.config
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\bin\Debug\Tremors.exe
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\bin\Debug\Tremors.pdb
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\obj\Debug\Tremors.csprojAssemblyReference.cache
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\obj\Debug\Tremors.Form1.resources
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\obj\Debug\Tremors.Properties.Resources.resources
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\obj\Debug\Tremors.csproj.GenerateResource.cache
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\obj\Debug\Tremors.csproj.CoreCompileInputs.cache
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\obj\Debug\Tremors.exe
+G:\myw\研究生阶段文档\毕业流程规范\A0第四章内容\用户实验\震颤项目\Tremors\Tremors\obj\Debug\Tremors.pdb
