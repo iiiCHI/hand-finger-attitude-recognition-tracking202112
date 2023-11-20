@@ -4,20 +4,24 @@
         Title="MainWindow" Height="437" Width="800"
         KeyDown="MainWindows_Keydown">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="515*"/>
+            <ColumnDefinition Width="277*"/>
+        </Grid.ColumnDefinitions>
         <Label Name="test" Content="基于LeapMotion的手势数据采集软件" FontSize="20" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="381"/>
-        <Image Name="IRimage" HorizontalAlignment="Left" Height="251" Margin="45,126,0,0" VerticalAlignment="Top" Width="482" RenderTransformOrigin="0.5,0.5" Stretch="Fill"/>
+        <Image Name="IRimage" HorizontalAlignment="Left" Height="251" Margin="45,126,0,0" VerticalAlignment="Top" Width="482" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Grid.ColumnSpan="2"/>
         <Label Name="test1" Content="传感器红外图像：" FontSize="15" HorizontalAlignment="Left" Margin="209,85,0,0" VerticalAlignment="Top"/>
 
-        <Label Name="show" Content="test" HorizontalAlignment="Left" Height="31" Margin="362,255,0,0" VerticalAlignment="Top" Width="342" Visibility="Hidden"/>
-        <Button Name="captureBtn" Content="点击开始采集" HorizontalAlignment="Left" Margin="616,306,0,0" VerticalAlignment="Top" Width="125" Height="42" FontSize="16" Click="captureBtn_Click" KeyDown="captureBtn_KeyDown"/>
-        <TextBox Name="subjetcIndex" HorizontalAlignment="Left" Height="29" Margin="711,105,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="59" FontSize="18"/>
-        <Label Content="采集者编号：" HorizontalAlignment="Left" Height="31" Margin="544,105,0,0" VerticalAlignment="Top" Width="137" FontSize="18"/>
-        <Label Content="手势编号：" HorizontalAlignment="Left" Height="31" Margin="544,141,0,0" VerticalAlignment="Top" Width="137" FontSize="18"/>
-        <Label Content="采集次数编号：" HorizontalAlignment="Left" Height="31" Margin="544,177,0,0" VerticalAlignment="Top" Width="137" FontSize="18"/>
-        <TextBox Name="gestureIndex" HorizontalAlignment="Left" Height="29" Margin="711,145,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="59" FontSize="18"/>
-        <TextBox Name="sampleIndex" HorizontalAlignment="Left" Height="29" Margin="711,181,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="59" FontSize="18"/>
-        <TextBox x:Name="TobxLeft" HorizontalAlignment="Left" Height="23" Margin="549,220,0,0" TextWrapping="Wrap" Text="左手未检测到" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="TobxRight" HorizontalAlignment="Left" Height="23" Margin="549,255,0,0" TextWrapping="Wrap" Text="右手未检测到" VerticalAlignment="Top" Width="120"/>
+        <Label Name="show" Content="test" HorizontalAlignment="Left" Height="31" Margin="362,255,0,0" VerticalAlignment="Top" Width="342" Visibility="Hidden" Grid.ColumnSpan="2"/>
+        <Button Name="captureBtn" Content="点击开始采集" HorizontalAlignment="Left" Margin="100.615,306,0,0" VerticalAlignment="Top" Width="125" Height="42" FontSize="16" Click="captureBtn_Click" KeyDown="captureBtn_KeyDown" Grid.Column="1"/>
+        <TextBox Name="subjetcIndex" HorizontalAlignment="Left" Height="29" Margin="195.615,105,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="59" FontSize="18" Grid.Column="1"/>
+        <Label Content="采集者编号：" HorizontalAlignment="Left" Height="31" Margin="28.615,105,0,0" VerticalAlignment="Top" Width="137" FontSize="18" Grid.Column="1"/>
+        <Label Content="手势编号：" HorizontalAlignment="Left" Height="31" Margin="28.615,141,0,0" VerticalAlignment="Top" Width="137" FontSize="18" Grid.Column="1"/>
+        <Label Content="采集次数编号：" HorizontalAlignment="Left" Height="31" Margin="28.615,177,0,0" VerticalAlignment="Top" Width="137" FontSize="18" Grid.Column="1"/>
+        <TextBox Name="gestureIndex" HorizontalAlignment="Left" Height="29" Margin="195.615,145,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="59" FontSize="18" Grid.Column="1"/>
+        <TextBox Name="sampleIndex" HorizontalAlignment="Left" Height="29" Margin="195.615,181,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="59" FontSize="18" Grid.Column="1"/>
+        <TextBox x:Name="TobxLeft" HorizontalAlignment="Left" Height="23" Margin="33.615,220,0,0" TextWrapping="Wrap" Text="左手未检测到" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+        <TextBox x:Name="TobxRight" HorizontalAlignment="Left" Height="23" Margin="33.615,255,0,0" TextWrapping="Wrap" Text="右手未检测到" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
 
 
     </Grid>

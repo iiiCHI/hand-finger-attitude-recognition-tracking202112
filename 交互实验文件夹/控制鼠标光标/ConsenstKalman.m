@@ -36,8 +36,9 @@ Hand_posture = zeros(7*4, 1);%”√”⁄¥Ê∑≈  ÷≤ø◊ÀÃ¨£¨ƒ¥÷∏¡Ω∏ˆπÿΩ⁄◊ÀÃ¨£¨ ≥÷∏¡Ω∏ˆπÿΩ⁄◊
 NiheA=load('Xishu.mat').NiheA;%∞—œµ ˝º”‘ÿΩ¯¿¥£¨√˚◊÷Œ™NiheA  “ªπ≤”–IMU_num¡–£¨6––£¨∑÷±∂‘”¶œµ ˝”Î∆´≤Ó
 PreX = [1,0,0,0];%”√¿¥±£¥Ê…œ“ª ±øÃµƒ◊ÀÃ¨µƒ
 %% …Ë÷√÷–÷µ¬À≤®
-% window_size = 5;
-% medians = zeros(5, 4); % ŒÂ––Àƒ¡–£¨
+window_size = 3;
+windowX = zeros(1, window_size); % ŒÂ––Àƒ¡–µƒX£¨
+windowY = zeros(1, window_size); % ŒÂ––Àƒ¡–µƒY£¨
 IsInClickDown = false;
 
 %% Õ¯¬Á¥Æø⁄≤Œ ˝…Ë÷√
@@ -49,11 +50,16 @@ IsInClickDown = false;
 % while s.Connected == 0
 %    pause(0.5);
 % end
-% disp('¥Æø⁄Ω”»Î≥…π¶£¨—≠ª∑∂¡»° ˝æ›:\n');
+% disp('¥Æø⁄Ω”»Î≥…π¶£¨—≠ª∑∂¡»° ˝æ›:\n');z
 % flush(s)
 %% UDP¡¨Ω”
 % ¥¥Ω® UDP ∂‘œÛ
 udpPort = 8080;  % —°‘Ò“ª∏ˆŒ¥±ª π”√µƒ∂Àø⁄∫≈
+try
+fclose(instrfindall('RemoteHost', '192.168.1.103', 'RemotePort', 8080));  % πÿ±’¡¨Ω”
+catch
+end
+%% 
 s = udp('192.168.1.103', udpPort, 'LocalPort', udpPort);
 set(s, 'InputBufferSize', 4096); % …Ë÷√ ‰»Îª∫≥Â«¯¥Û–°
 set(s, 'Timeout', 2); % …Ë÷√µ»¥˝ ±º‰Œ™ 5 √Î
@@ -75,12 +81,19 @@ options=optimoptions('fmincon', 'Display', 'off', 'Algorithm', 'sqp');% interior
 
 %% –¬Ω®ªÚ¥Úø™ ˝æ›Œƒº˛,Œƒº˛¬∑æ∂∏˘æ› µº 
 str1 = '%f';
+str2 = '%f';
 for i = 3:(7*4)%±Ì æ∆ﬂ∏ˆπÿΩ⁄£¨√ø∏ˆπÿΩ⁄Àƒ∏ˆ ˝◊÷
     str1=strcat(str1, ',%f');
 end
-str1 = strcat(str1, ',%f\n');
-FileName = strcat('.\rowdata3.csv');
-%fileID1 = fopen(FileName,'a');
+for i = 3:(9*8+1)%±Ì æ∆ﬂ∏ˆπÿΩ⁄£¨√ø∏ˆπÿΩ⁄Àƒ∏ˆ ˝◊÷
+    str2=strcat(str2, ',%f');
+end
+str1 = strcat(str1, ',%f');
+str2 = strcat(str2, ',%f');
+FileName = strcat('.\rowdataHandPosture.csv');
+FileNameIMU = strcat('.\rowdataIMU.csv');
+fileID1 = fopen(FileName,'a');
+fileIDIMU = fopen(FileNameIMU,'a');
 
 %% ø™ º◊º±∏
 drawnow limitrate nocallbacks
@@ -95,7 +108,7 @@ robot = Robot();
 %% ≤…ºØ ˝æ›
 while true
     count = count+1;
-    try
+    %try
         Input = fscanf(s,'%f')';   
         if length(Input)==IMU_num*9+1
             Dis_Count = Dis_Count + 1;
@@ -146,33 +159,41 @@ while true
             %% øÿ÷∆π‚±Í            
             funcControlMouse(Func_crossProductFu(Hand_posture(1:4),PreX)')
             %% ≈–∂œ «∑ÒΩ¯»Î√¸¡Ó£¨÷¥––œ‡”¶µƒ÷∏¡Ó°£
-            if ~IsInClickDown && func_MeetCondition(Hand_posture(2*4-3:2*4),2,[0.5,1]) && func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0.5,1])
+%             if ~IsInClickDown && func_MeetCondition(Hand_posture(2*4-3:2*4),2,[0.5,1]) && func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0.5,1])
+            if ~IsInClickDown && func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0.5,1])
                 funcControlMouseClickDown()
                 IsInClickDown=true;
                 funcControlMouseClickUp()
             end
-            if IsInClickDown&& func_MeetCondition(Hand_posture(2*4-3:2*4),2,[0,0.5]) && func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0,0.5])
-                
+%             if IsInClickDown&& func_MeetCondition(Hand_posture(2*4-3:2*4),2,[0,0.5]) || func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0,0.5])
+            if IsInClickDown&& func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0,0.5])
                 IsInClickDown=false;
             end
             PreX = Hand_posture(1:4);
         %%  ˝æ›±£¥Ê
-            %fprintf(fileID1, str1, Hand_posture);
+            t = posixtime(datetime('now', 'TimeZone', 'UTC')) * 1000;
+            fprintf(fileID1, str1, Hand_posture);
+            fprintf(fileID1,',%f\n',t);
+            fprintf(fileIDIMU, str2, Input);
+            fprintf(fileIDIMU, ',%f\n', t);
+            %fprintf(fileIDIMU, ',%s\n', datetime('now', 'Format', 'yyyy-MM-dd HH:mm:ss.SSS'));
         else
-            flag = flag + 1;
+            if length(Input) == 0
+                flag = flag + 1;
+            end
             disp(string(count)+'->'+string(flag)+'->'+string(length(Input))+"∆Ωæ˘ ±º‰Œ™:"+string(seconds(datetime - dtm)/(count-count_pre)));
             count_pre = count;
-            disp(Input');
+            %disp(Input');
             dtm = datetime;
-            if flag >= 21 
+            if flag >= 11 
                 break;
             end
         end
-    catch err
-        disp(err);
-        disp('Error');
-        break;
-    end
+%     catch err
+%         disp(err);
+%         disp('Error');
+%         break;
+%     end
 end
 
 disp('‘À––Ω· ¯');
@@ -199,7 +220,22 @@ function funcControlMouse(q_hand)
     currentX = currentLocation.getX();
     currentY = currentLocation.getY();
     % »√π‚±Í“∆∂ØµΩƒø±ÍŒª÷√
-    robot.mouseMove(currentX+x(2)*x(2)*x(2)*1000000, currentY+y(3)*y(3)*y(3)*1000000);
+    %disp("----")
+    x1 = sign(x(2))*(x(2)*x(2)*30000)+0.05;
+    y1 = sign(y(3))*(y(3)*y(3)*30000);
+    if abs(x1) < 0.1
+        x1 = 0;
+    end
+    if abs(y1) < 0.1
+        y1 = 0;
+    end
+    %÷–÷µ¬À≤® window
+    windowX = windowX(:,2:end);
+    windowX = [windowX,x1];
+    windowY = windowY(:,2:end);
+    windowY = [windowY,y1];
+
+    robot.mouseMove(currentX+median(sort(windowX)), currentY+median(sort(windowY)));
 end
 
 

@@ -1,49 +1,60 @@
 %% 对得到的数据进行约束求解；
-
-% addpath('quaternion_library');      % include quaternion library
+fclose('all');
+fclose(s);
 close all;                          % close all figures
 clear;                              % clear all variables
 clc;                                % clear the command terminal
+
+% 人员编号
+UserId = 2;
+% 手势编号 1：Open、2：OK、3：Close
+UserHandId = 1;
+UserHandSet = ["Open","OK","Close"];
+% Round编号
+RoundId = 1;
+
 
 % 定义接入程序的IMU硬件数目
 IMU_num = 8;
 
 ti=tic;
 
-%% 网络串口参数设置
-disp('…………开始设置串口…………');
-s = tcpserver('192.168.1.103',8080,"Timeout",3);
-s.InputBufferSize = 30000;
-disp('等待网络串口接入：\n');
-while s.Connected == 0
-   pause(0.5);
+% %% 网络串口参数设置
+% disp('…………开始设置串口…………');
+% s = tcpserver('192.168.1.103',8080,"Timeout",3);
+% s.InputBufferSize = 30000;
+% disp('等待网络串口接入：\n');
+% while s.Connected == 0
+%    pause(0.5);
+% end
+% disp('串口接入成功，循环读取数据:\n');
+% flush(s)
+
+
+%% UDP连接
+% 创建 UDP 对象
+udpPort = 8080;  % 选择一个未被使用的端口号
+try
+fclose(instrfindall('RemoteHost', '192.168.1.103', 'RemotePort', 8080));  % 关闭连接
+catch
 end
-disp('串口接入成功，循环读取数据:\n');
-flush(s)
+%% 
+s = udp('192.168.1.103', udpPort, 'LocalPort', udpPort);
+set(s, 'InputBufferSize', 4096); % 设置输入缓冲区大小
+set(s, 'Timeout', 2); % 设置等待时间为 5 秒
+% 打开 UDP 连接
+fopen(s);
+disp(['Listening on UDP port ', num2str(udpPort)]);
+
 
 
 %% 新建或打开数据文件,文件路径根据实际
 str1 = '%f';
-% str2 = '%f';
-% str3 = '%f';
-% str4 = '%f';
 for i = 2:IMU_num*9
     str1=strcat(str1, ',%f');
-%     if(i<=IMU_num*3)
-%        str2 = strcat(str2, ',%f'); 
-%     end
-%     if(i<=IMU_num*4)
-%        str3 = strcat(str3, ',%f'); 
-%     end
-%     if(i<=4)
-%        str4 = strcat(str4, ',%f'); 
-%     end
 end
-str1 = strcat(str1, ',%f\n');
-% str2 = strcat(str2, '\n');
-% str3 = strcat(str3, '\n');
-% str4 = strcat(str4, '\n');
-FileName = strcat('.\data\1\ok\','rowdata3.csv');
+str1 = strcat(str1, ',%f');
+FileName = (sprintf(".\\data\\UserId-%d\\UserHand-%s\\rowdata%d.csv",UserId,UserHandSet(UserHandId),RoundId));
 [folder, ~, ~] = fileparts(FileName);
 if exist(folder, 'dir') == 0
     mkdir(folder);
@@ -52,53 +63,59 @@ else
     disp('文件夹已存在。');
 end
 fileID1 = fopen(FileName,'a');
-% fileID2 = fopen(strcat('.\data\','角度结果',num2str(ti),'.csv'),'a');
-% fileID3 = fopen(strcat('G:\myw\研究生阶段文档\毕业流程规范\约束求解方法\data\绕单个轴旋转约束\仅约束P4结果\','仅约束P4四元数结果',num2str(ti),'.csv'),'a');
-% fileID8 = fopen(strcat('.\data\','两个IMU姿态差异结果',num2str(ti),'.csv'),'a');
 count=1;
+dtm = datetime;
 flag=0;
 Dis_Count = 0;
+count_pre = count;
 ti=tic;
 %% 采集数据
-% while tc.Connected > 0
 while true
     count = count+1;
-    if count > 200
-        break;
-    end
-%     try
-%         Input = fscanf(tc,'%f')';
+    try
         Input = fscanf(s,'%f')';   
         if length(Input)==IMU_num*9+1
+            Dis_Count = Dis_Count + 1;
+            if mod(Dis_Count,100) == 0
+                disp(Dis_Count)
+            end
+            if any(isnan(Input))
+                disp('NaN found in rawData')
+                %rawData
+                continue
+            end  
             %% 文件输出
-    %         str4 = Input+datestr(now);
             fprintf(fileID1, str1, Input);
-    %         fprintf(fileID2, str2, Euler_k);
-    %         fprintf(fileID3, str3, X_k);
-    %         fprintf(fileID3, str4, F_Z);
-    %         fprintf(fileID8, str4, Q_diff);
-    %         disp(X_k(5:8)');
+            currentDateTime = datetime('now', 'TimeZone', 'UTC');
+            %fprintf(fileID1, ',%s\n', datetime('now', 'Format', 'yyyy-MM-dd HH:mm:ss.SSS'));
+            fprintf(fileID1, ',%f\n', posixtime(currentDateTime) * 1000);
     
-        else
-            flag = flag + 1;
-            disp(string(count)+'->'+string(flag)+'->'+string(length(Input)));
+ else
+            if isempty(Input)
+                flag = flag + 1;
+                if flag >= 11 
+                    break;
+                end
+            end
+            disp(string(count)+'->'+string(flag)+'->'+string(length(Input))+"平均时间为:"+string(seconds(datetime - dtm)/(count-count_pre)));
             count_pre = count;
             disp(Input');
             dtm = datetime;
-            if flag >= 11 
-                break;
-            end
         end
-%     catch err
-%         disp(err);
-%         disp('Error');
-%         break;
-%     end
+    catch err
+        disp(err);
+        disp('Error');
+        break;
+    end
 end
 
 disp('运行结束');
 %关闭文件
-fclose(fileID1);
-fclose('all');
 close all
+fclose('all');
+fclose(instrfindall('RemoteHost', '192.168.1.103', 'RemotePort', 8080));  % 关闭连接
+fclose(s);
+% clear fileID1 fileID2 fileID3;
+%fclose(fileID1);
 disp('End...');
+

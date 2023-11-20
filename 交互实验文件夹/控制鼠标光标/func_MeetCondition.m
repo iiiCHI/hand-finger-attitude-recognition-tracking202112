@@ -7,7 +7,7 @@ function [IsMeet] = func_MeetCondition(Quaternion,Col,Range)
 %   输出：
 %       IsMeet：
 %   创始人：马永伟     日期：2023年8月15日
-    if Quaternion(Col)>Range(1)&&Quaternion(Col)<Range(2)
+    if abs(Quaternion(Col))>Range(1)&&abs(Quaternion(Col))<Range(2)
         IsMeet = true;
     else
         IsMeet = false;
