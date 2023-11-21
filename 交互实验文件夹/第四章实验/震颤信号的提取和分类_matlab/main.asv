@@ -1,11 +1,16 @@
 clear;
+
+UserId = 1;
+
+
+
 % 指定CSV文件路径
-csvFilePath = 'UserId_1_RowImu.csv';
+csvFilePath = ['./DataSet/UserId_',num2str(UserId),'_RowImu.csv'];
 
 
 % 使用readmatrix函数读取CSV文件数据（包括表头）
 dataIMU = readmatrix(csvFilePath);
-dataAction = readmatrix('UserId_1_UserAction');
+dataAction = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']);
 
 
 % 记录特征的矩阵
@@ -58,9 +63,9 @@ for index = 1:numRows
     Acc_Tar = sqrt(Tar(:,1).*Tar(:,1)+Tar(:,2).*Tar(:,2)+Tar(:,3).*Tar(:,3));
 
     for Fature_index = 1:6
-        Features_Tar(CountFeature,Fature_index,:) = Calu_Feature(Tar(:,Fature_index),222);
-        Features_Act(CountFeature,Fature_index,:) = Calu_Feature(Act(:,Fature_index),222);
-        Features_Rst(CountFeature,Fature_index,:) = Calu_Feature(Rst(:,Fature_index),222);
+        [Features_Tar(CountFeature,Fature_index,:),After_Tar] = Calu_Feature(Tar(:,Fature_index),222);
+        [Features_Act(CountFeature,Fature_index,:),After_Act] = Calu_Feature(Act(:,Fature_index),222);
+        [Features_Rst(CountFeature,Fature_index,:),After_Rst] = Calu_Feature(Rst(:,Fature_index),222);
     end
     CountFeature = CountFeature+1;
 
@@ -79,23 +84,39 @@ end
 
 wlable = ['x','y','z'];
 
-AGIndex = 4;
-FeaIndex = 10;%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，8峰峰值，4-6hz强度，6-12hz强度、颤抖的主频率（Dominant Frequency of Tremor，FT）
+AGIndex = 3;
+FeaIndex = 9;%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，8峰峰值，4-6hz强度，6-12hz强度、颤抖的主频率（Dominant Frequency of Tremor，FT）
 figure;
 for AGIndex = 4:6
-subplot(3,1,AGIndex-3);
-hold on
-plot(sort(Features_Act(:,AGIndex,FeaIndex),'descend'))
-plot(sort(Features_Rst(:,AGIndex,FeaIndex),'descend'))
-plot(sort(Features_Tar(:,AGIndex,FeaIndex),'descend'))
-% 添加标题和标签
-title(['陀螺仪',wlable(AGIndex-3),'轴：休息性震颤信号（4Hz-6Hz）']);
-% title('运动性震颤信号（4-12hz）');
-xlabel('交互轮数序号');
-ylabel('功率谱密度');
+    subplot(3,1,AGIndex-3);
+    hold on
+%     plot(sort(Features_Act(:,AGIndex,FeaIndex),'descend'))
+%     plot(sort(Features_Rst(:,AGIndex,FeaIndex),'descend'))
+%     plot(sort(Features_Tar(:,AGIndex,FeaIndex),'descend'))
+    plot(Features_Act(:,AGIndex-3,FeaIndex))
+    plot(Features_Rst(:,AGIndex-3,FeaIndex))
+    plot(Features_Tar(:,AGIndex-3,FeaIndex))
+    % 添加标题和标签
+%     title(['陀螺仪',wlable(AGIndex-3),'轴：静止性震颤信号（4Hz-6Hz）']);
+    title(['陀螺仪',wlable(AGIndex-3),'轴：运动性震颤信号（6Hz-12hz）']);    
+    ylabel('功率谱密度');
 end
 % 添加图例
+xlabel('交互轮数序号');
 legend('intention tremor', 'res area', 'target area');
+
+
+% % 画图，滤波前后的信号
+% figure;
+% subplot(2,1,1)
+% plot([1:size(After_Tar,1)]/222,Tar(:,Fature_index),'blue')
+% legend('滤波前');
+% ylabel('角速度 deg/s');
+% subplot(2,1,2)
+% plot([1:size(After_Tar,1)]/222,After_Tar,'red')
+% legend('滤波后');
+% xlabel('时间 s');
+% ylabel('角速度 deg/s');
 
 
 % AGIndex = 6;
@@ -113,7 +134,7 @@ legend('intention tremor', 'res area', 'target area');
 % end
 
 
-function Feature = Calu_Feature(acceleration_data,Fs)
+function [Feature,bandpass_filtered_data] = Calu_Feature(acceleration_data,Fs)
     % Example: Replace outliers with the mean of their neighbors
     % Adjust as needed    
     for i = 2:(length(acceleration_data) - 1)
@@ -142,6 +163,8 @@ function Feature = Calu_Feature(acceleration_data,Fs)
     
     % 应用低通滤波器
     bandpass_filtered_data = filter(b_low, a_low, highpass_filtered_data);
+
+    %% 输出原始信号和滤波后信号
 
     % 设置采样率
     Fs = 222; % Hz
@@ -176,7 +199,7 @@ function Feature = Calu_Feature(acceleration_data,Fs)
     power_spectrum = abs(fft(data, nfft)).^2/nfft; % 功率谱密度
   
     freq_range_1 = [4, 6]; % 4Hz到6Hz
-    freq_range_2 = [6, 12]; % 6Hz到12Hz
+    freq_range_2 = [4, 12]; % 6Hz到12Hz
 
     % 找到对应的频率索引
     freq_index_1 = frequencies >= freq_range_1(1) & frequencies <= freq_range_1(2);

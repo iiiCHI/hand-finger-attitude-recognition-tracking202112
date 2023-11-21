@@ -1,0 +1,6 @@
+function [PowerSpectrum,f] = Func_GetPowerSpectrum(RowData)
+%FUNC_GETPOWERSPECTRUM 这个函数是用来求功率谱的，输入为原始数据，输出为功率谱结果
+%   输入参数为：原始数据和采样率
+    [pxx, f] = pwelch(x, [], [], [], fs);
+end
+

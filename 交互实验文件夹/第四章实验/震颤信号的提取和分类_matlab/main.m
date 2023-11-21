@@ -1,37 +1,31 @@
 clear;
-% 指定CSV文件路径
-csvFilePath = 'UserId_1_RowImu.csv';
 
+UserId = 9;
+
+
+
+% 指定CSV文件路径
 
 % 使用readmatrix函数读取CSV文件数据（包括表头）
-dataIMU = readmatrix(csvFilePath);
-dataAction = readmatrix('UserId_1_UserAction');
+dataIMU     = readmatrix(['./DataSet/UserId_',num2str(UserId),'_RowImu.csv']);
+dataAction  = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']);
 
 
 % 记录特征的矩阵
 Features_Rst = [];%是6x人数x特征个数
-
 Features_Act = [];%是6x人数x特征个数
-
 Features_Tar = [];%是6x人数x特征个数
-
 CountFeature = 1;
-
 % 获取矩阵的行数
 numRows = size(dataAction, 1);
-
-for index = 1:numRows
-% for index = 7:7
-    currentRow = dataAction(index, :);
-    
+% for index = 1:numRows
+for index = 7:7
+    currentRow = dataAction(index, :);    
     if currentRow(8) == 0
         continue;
     end
-
-
     % 获取第14列的数据
-    column14 = dataIMU(:, 14);
-    
+    column14 = dataIMU(:, 14);    
     % RstStart,RstEnd
     Rst = [];
     Act = [];
