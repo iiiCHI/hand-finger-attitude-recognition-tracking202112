@@ -1,42 +1,31 @@
 clear;
 
-UserId = 1;
+UserId = 8;
 
 
 
 % 指定CSV文件路径
-csvFilePath = ['./DataSet/UserId_',num2str(UserId),'_RowImu.csv'];
-
 
 % 使用readmatrix函数读取CSV文件数据（包括表头）
-dataIMU = readmatrix(csvFilePath);
-dataAction = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']);
+dataIMU     = readmatrix(['./DataSet/UserId_',num2str(UserId),'_RowImu.csv']);
+dataAction  = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']);
 
 
 % 记录特征的矩阵
 Features_Rst = [];%是6x人数x特征个数
-
 Features_Act = [];%是6x人数x特征个数
-
 Features_Tar = [];%是6x人数x特征个数
-
 CountFeature = 1;
-
 % 获取矩阵的行数
 numRows = size(dataAction, 1);
-
 for index = 1:numRows
 % for index = 7:7
-    currentRow = dataAction(index, :);
-    
+    currentRow = dataAction(index, :);    
     if currentRow(8) == 0
         continue;
     end
-
-
     % 获取第14列的数据
-    column14 = dataIMU(:, 14);
-    
+    column14 = dataIMU(:, 14);    
     % RstStart,RstEnd
     Rst = [];
     Act = [];
@@ -85,7 +74,7 @@ end
 wlable = ['x','y','z'];
 
 AGIndex = 3;
-FeaIndex = 9;%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，8峰峰值，4-6hz强度，6-12hz强度、颤抖的主频率（Dominant Frequency of Tremor，FT）
+FeaIndex = 1;%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，8峰峰值，4-6hz强度，6-12hz强度、颤抖的主频率（Dominant Frequency of Tremor，FT）
 figure;
 for AGIndex = 4:6
     subplot(3,1,AGIndex-3);

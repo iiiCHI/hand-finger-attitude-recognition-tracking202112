@@ -1,6 +1,6 @@
 clear;
 
-UserId = 9;
+UserId = 8;
 
 
 
@@ -12,14 +12,14 @@ dataAction  = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']
 
 
 % 记录特征的矩阵
-Features_Rst = [];%是6x人数x特征个数
-Features_Act = [];%是6x人数x特征个数
-Features_Tar = [];%是6x人数x特征个数
+Features_Rst = [];%是难度x轮数x6x人数x特征个数
+Features_Act = [];%是难度x轮数x6x人数x特征个数
+Features_Tar = [];%是难度x轮数x6x人数x特征个数
 CountFeature = 1;
 % 获取矩阵的行数
 numRows = size(dataAction, 1);
-% for index = 1:numRows
-for index = 7:7
+for index = 1:numRows
+% for index = 7:7
     currentRow = dataAction(index, :);    
     if currentRow(8) == 0
         continue;
@@ -52,11 +52,11 @@ for index = 7:7
     Acc_Tar = sqrt(Tar(:,1).*Tar(:,1)+Tar(:,2).*Tar(:,2)+Tar(:,3).*Tar(:,3));
 
     for Fature_index = 1:6
-        [Features_Tar(CountFeature,Fature_index,:),After_Tar] = Calu_Feature(Tar(:,Fature_index),222);
-        [Features_Act(CountFeature,Fature_index,:),After_Act] = Calu_Feature(Act(:,Fature_index),222);
-        [Features_Rst(CountFeature,Fature_index,:),After_Rst] = Calu_Feature(Rst(:,Fature_index),222);
+        [Features_Tar(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Tar] = Calu_Feature(Tar(:,Fature_index),222);
+        [Features_Act(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Act] = Calu_Feature(Act(:,Fature_index),222);
+        [Features_Rst(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Rst] = Calu_Feature(Rst(:,Fature_index),222);
     end
-    CountFeature = CountFeature+1;
+%     CountFeature = CountFeature+1;
 
 
 end
@@ -74,7 +74,7 @@ end
 wlable = ['x','y','z'];
 
 AGIndex = 3;
-FeaIndex = 9;%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，8峰峰值，4-6hz强度，6-12hz强度、颤抖的主频率（Dominant Frequency of Tremor，FT）
+FeaIndex = 1;%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，8峰峰值，4-6hz强度，6-12hz强度、颤抖的主频率（Dominant Frequency of Tremor，FT）
 figure;
 for AGIndex = 4:6
     subplot(3,1,AGIndex-3);
@@ -82,9 +82,9 @@ for AGIndex = 4:6
 %     plot(sort(Features_Act(:,AGIndex,FeaIndex),'descend'))
 %     plot(sort(Features_Rst(:,AGIndex,FeaIndex),'descend'))
 %     plot(sort(Features_Tar(:,AGIndex,FeaIndex),'descend'))
-    plot(Features_Act(:,AGIndex-3,FeaIndex))
-    plot(Features_Rst(:,AGIndex-3,FeaIndex))
-    plot(Features_Tar(:,AGIndex-3,FeaIndex))
+    plot(Features_Act(1,:,AGIndex-3,FeaIndex))
+    plot(Features_Rst(1,:,AGIndex-3,FeaIndex))
+    plot(Features_Tar(1,:,AGIndex-3,FeaIndex))
     % 添加标题和标签
 %     title(['陀螺仪',wlable(AGIndex-3),'轴：静止性震颤信号（4Hz-6Hz）']);
     title(['陀螺仪',wlable(AGIndex-3),'轴：运动性震颤信号（6Hz-12hz）']);    
@@ -239,3 +239,4 @@ end
 % title('经过10阶巴特沃斯带通滤波后的数据');
 % xlabel('时间 (s)');
 % ylabel('角速度');
+
