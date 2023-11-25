@@ -1,9 +1,9 @@
 clear;
 
-UserId = 8;
+% UserId = 8;
 
 
-
+for UserId = 1:9
 % 指定CSV文件路径
 
 % 使用readmatrix函数读取CSV文件数据（包括表头）
@@ -12,9 +12,9 @@ dataAction  = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']
 
 
 % 记录特征的矩阵
-Features_Rst = [];%是6x人数x特征个数
-Features_Act = [];%是6x人数x特征个数
-Features_Tar = [];%是6x人数x特征个数
+Features_Rst = [];%是难度x轮数x6x人数x特征个数
+Features_Act = [];%是难度x轮数x6x人数x特征个数
+Features_Tar = [];%是难度x轮数x6x人数x特征个数
 CountFeature = 1;
 % 获取矩阵的行数
 numRows = size(dataAction, 1);
@@ -52,11 +52,11 @@ for index = 1:numRows
     Acc_Tar = sqrt(Tar(:,1).*Tar(:,1)+Tar(:,2).*Tar(:,2)+Tar(:,3).*Tar(:,3));
 
     for Fature_index = 1:6
-        [Features_Tar(CountFeature,Fature_index,:),After_Tar] = Calu_Feature(Tar(:,Fature_index),222);
-        [Features_Act(CountFeature,Fature_index,:),After_Act] = Calu_Feature(Act(:,Fature_index),222);
-        [Features_Rst(CountFeature,Fature_index,:),After_Rst] = Calu_Feature(Rst(:,Fature_index),222);
+        [Features_Tar(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Tar] = Calu_Feature(Tar(:,Fature_index),222);
+        [Features_Act(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Act] = Calu_Feature(Act(:,Fature_index),222);
+        [Features_Rst(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Rst] = Calu_Feature(Rst(:,Fature_index),222);
     end
-    CountFeature = CountFeature+1;
+%     CountFeature = CountFeature+1;
 
 
 end
@@ -82,9 +82,9 @@ for AGIndex = 4:6
 %     plot(sort(Features_Act(:,AGIndex,FeaIndex),'descend'))
 %     plot(sort(Features_Rst(:,AGIndex,FeaIndex),'descend'))
 %     plot(sort(Features_Tar(:,AGIndex,FeaIndex),'descend'))
-    plot(Features_Act(:,AGIndex-3,FeaIndex))
-    plot(Features_Rst(:,AGIndex-3,FeaIndex))
-    plot(Features_Tar(:,AGIndex-3,FeaIndex))
+    plot(Features_Act(1,:,AGIndex-3,FeaIndex))
+    plot(Features_Rst(1,:,AGIndex-3,FeaIndex))
+    plot(Features_Tar(1,:,AGIndex-3,FeaIndex))
     % 添加标题和标签
 %     title(['陀螺仪',wlable(AGIndex-3),'轴：静止性震颤信号（4Hz-6Hz）']);
     title(['陀螺仪',wlable(AGIndex-3),'轴：运动性震颤信号（6Hz-12hz）']);    
@@ -93,6 +93,7 @@ end
 % 添加图例
 xlabel('交互轮数序号');
 legend('intention tremor', 'res area', 'target area');
+
 
 
 % % 画图，滤波前后的信号
@@ -218,6 +219,8 @@ function [Feature,bandpass_filtered_data] = Calu_Feature(acceleration_data,Fs)
 
     Feature = [Feature,power_range1,power_range2,average_dominant_frequency];
 
+    %% 计算偏度和峰度
+    Feature = [Feature,Func_GetFeature(data)];
 end
 
 %% 绘制原始、高通滤波和带通滤波后的数据
@@ -239,3 +242,4 @@ end
 % title('经过10阶巴特沃斯带通滤波后的数据');
 % xlabel('时间 (s)');
 % ylabel('角速度');
+

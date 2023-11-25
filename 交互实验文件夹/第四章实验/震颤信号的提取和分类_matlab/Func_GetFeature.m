@@ -1,10 +1,10 @@
-function [DataFeature] = Func_GetFeature(RowData,FS)
+function [DataFeature] = Func_GetFeature(RowData)
 %FUNC_GETFEATURE 这个函数是为了获取这个波形的各项特征。
 %   输入：
 %       RowData：原始数据
 %       FS：采样率
 %   输出：
-%       DataFeature 数据的特征，包括偏度m3、峰度m4
+%       DataFeature 数据的特征，包括偏度m3、峰度m4、差异立方值Rj
     
 
     %% 使用函数拟合数据到正态分布
@@ -23,6 +23,7 @@ function [DataFeature] = Func_GetFeature(RowData,FS)
         end
         Rj = max(Rj,fz/(fm^(2/3)));
     end
+    DataFeature = [m3,m4,Rj];
 end
 
 

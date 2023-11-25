@@ -1,0 +1,163 @@
+%% 用于机器学习分类的
+clc;clear;
+load('9位同学的特征.mat');
+%%临时保存所有的特征，然后求九个人的均值。或者是求3*9=27个，都可以
+FistFea_Tar = reshape(Features_Tar(1,:,:,:,:),[30*9,6*14]);
+SecFea_Tar = reshape(Features_Tar(2,:,:,:,:),[30*9,6*14]);
+ThrFea_Tar = reshape(Features_Tar(3,:,:,:,:),[30*9,6*14]);
+
+FistFea_Rst = reshape(Features_Rst(1,:,:,:,:),[30*9,6*14]);
+SecFea_Rst = reshape(Features_Rst(2,:,:,:,:),[30*9,6*14]);
+ThrFea_Rst = reshape(Features_Rst(3,:,:,:,:),[30*9,6*14]);
+
+FistFea_Act = reshape(Features_Act(1,:,:,:,:),[30*9,6*14]);
+SecFea_Act = reshape(Features_Act(2,:,:,:,:),[30*9,6*14]);
+ThrFea_Act = reshape(Features_Act(3,:,:,:,:),[30*9,6*14]);
+
+%% 数据预处理
+% 找到所有元素均为0的行
+rowsToDelete = all(FistFea_Tar == 0, 2);
+% 删除所有元素均为0的行
+FistFea_Tar(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(SecFea_Tar == 0, 2);
+% 删除所有元素均为0的行
+SecFea_Tar(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(ThrFea_Tar == 0, 2);
+% 删除所有元素均为0的行
+ThrFea_Tar(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(FistFea_Rst == 0, 2);
+% 删除所有元素均为0的行
+FistFea_Rst(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(SecFea_Rst == 0, 2);
+% 删除所有元素均为0的行
+SecFea_Rst(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(ThrFea_Act == 0, 2);
+% 删除所有元素均为0的行
+ThrFea_Act(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(FistFea_Act == 0, 2);
+% 删除所有元素均为0的行
+FistFea_Act(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(SecFea_Act == 0, 2);
+% 删除所有元素均为0的行
+SecFea_Act(rowsToDelete, :) = [];
+
+% 找到所有元素均为0的行
+rowsToDelete = all(ThrFea_Act == 0, 2);
+% 删除所有元素均为0的行
+ThrFea_Act(rowsToDelete, :) = [];
+
+
+
+% 设置种子
+rng(1);  % 保证结果的重复计算仍一致
+
+%% 区分三种交互意图
+data1 = FistFea_Act; 
+data2 = SecFea_Act; 
+data3 = ThrFea_Act;
+% 合并数据和标签
+data = [data1; data2; data3];
+labels = [repmat('F', size(data1, 1), 1); repmat('S', size(data2, 1), 1); repmat('T', size(data3, 1), 1)];
+
+
+% 随机打乱数据
+idx = randperm(size(data, 1));
+data = data(idx, :);
+labels = labels(idx, :);
+
+% 划分数据集为训练集和测试集
+splitRatio = 0.8; % 80% 的数据用于训练，20%用于测试
+splitIdx = round(splitRatio * size(data, 1));
+
+trainData = data(1:splitIdx, :);
+trainLabels = labels(1:splitIdx, :);
+testData = data(splitIdx+1:end, :);
+testLabels = labels(splitIdx+1:end, :);
+
+% 使用支持向量机（SVM）进行分类
+svmModel = fitcecoc(trainData, trainLabels);
+svmPredictions = predict(svmModel, testData);
+svmAccuracy = sum(svmPredictions == testLabels) / numel(testLabels);
+disp(['SVM Accuracy: ', num2str(svmAccuracy)]);
+
+% 使用k最近邻（KNN）进行分类
+knnModel = fitcknn(trainData, trainLabels);
+knnPredictions = predict(knnModel, testData);
+knnAccuracy = sum(knnPredictions == testLabels) / numel(testLabels);
+disp(['KNN Accuracy: ', num2str(knnAccuracy)]);
+
+% 使用决策树进行分类
+treeModel = fitctree(trainData, trainLabels);
+treePredictions = predict(treeModel, testData);
+treeAccuracy = sum(treePredictions == testLabels) / numel(testLabels);
+disp(['Decision Tree Accuracy: ', num2str(treeAccuracy)]);
+
+% 使用朴素贝叶斯进行分类
+nbModel = fitcnb(trainData, trainLabels);
+nbPredictions = predict(nbModel, testData);
+nbAccuracy = sum(nbPredictions == testLabels) / numel(testLabels);
+disp(['Naive Bayes Accuracy: ', num2str(nbAccuracy)]);
+
+
+disp('-----------');
+%% 区分三种交互意图
+data1 = FistFea_Act; 
+data2 = SecFea_Act; 
+data3 = ThrFea_Act;
+% 合并数据和标签
+data = [data1; data2; data3];
+labels = [repmat('F', size(data1, 1), 1); repmat('S', size(data2, 1), 1); repmat('T', size(data3, 1), 1)];
+
+
+% 随机打乱数据
+idx = randperm(size(data, 1));
+data = data(idx, :);
+labels = labels(idx, :);
+
+% 划分数据集为训练集和测试集
+splitRatio = 0.8; % 80% 的数据用于训练，20%用于测试
+splitIdx = round(splitRatio * size(data, 1));
+
+trainData = data(1:splitIdx, :);
+trainLabels = labels(1:splitIdx, :);
+testData = data(splitIdx+1:end, :);
+testLabels = labels(splitIdx+1:end, :);
+
+% 使用支持向量机（SVM）进行分类
+svmModel = fitcecoc(trainData, trainLabels);
+svmPredictions = predict(svmModel, testData);
+svmAccuracy = sum(svmPredictions == testLabels) / numel(testLabels);
+disp(['SVM Accuracy: ', num2str(svmAccuracy)]);
+
+% 使用k最近邻（KNN）进行分类
+knnModel = fitcknn(trainData, trainLabels);
+knnPredictions = predict(knnModel, testData);
+knnAccuracy = sum(knnPredictions == testLabels) / numel(testLabels);
+disp(['KNN Accuracy: ', num2str(knnAccuracy)]);
+
+% 使用决策树进行分类
+treeModel = fitctree(trainData, trainLabels);
+treePredictions = predict(treeModel, testData);
+treeAccuracy = sum(treePredictions == testLabels) / numel(testLabels);
+disp(['Decision Tree Accuracy: ', num2str(treeAccuracy)]);
+
+% 使用朴素贝叶斯进行分类
+nbModel = fitcnb(trainData, trainLabels);
+nbPredictions = predict(nbModel, testData);
+nbAccuracy = sum(nbPredictions == testLabels) / numel(testLabels);
+disp(['Naive Bayes Accuracy: ', num2str(nbAccuracy)]);
+

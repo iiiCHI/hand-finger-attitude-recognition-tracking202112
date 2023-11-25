@@ -1,66 +1,78 @@
 clear;
 
-UserId = 8;
-
-
-
-% 指定CSV文件路径
-
-% 使用readmatrix函数读取CSV文件数据（包括表头）
-dataIMU     = readmatrix(['./DataSet/UserId_',num2str(UserId),'_RowImu.csv']);
-dataAction  = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']);
-
-
+% UserId = 8;
 % 记录特征的矩阵
-Features_Rst = [];%是难度x轮数x6x人数x特征个数
-Features_Act = [];%是难度x轮数x6x人数x特征个数
-Features_Tar = [];%是难度x轮数x6x人数x特征个数
-CountFeature = 1;
-% 获取矩阵的行数
-numRows = size(dataAction, 1);
-for index = 1:numRows
-% for index = 7:7
-    currentRow = dataAction(index, :);    
-    if currentRow(8) == 0
-        continue;
+Features_Rst = [];%是难度x轮数x人数x6x特征个数
+Features_Act = [];%是难度x轮数x人数x6x特征个数
+Features_Tar = [];%是难度x轮数x人数x6x特征个数
+
+%FistFea = reshape(Features_Tar(1,:,:,:,:),[30*9,6*14]);//用来提取某一个难度的特征的
+                                         % 怎么分的呢，先按照轮数，1-30轮，往后是人数，
+                                         % 后面是，先按照IMU的6个参数，再按照特征去划分。
+for UserId = 1:9
+    disp(['UserId:',num2str(UserId)])
+    % 指定CSV文件路径
+    % 使用readmatrix函数读取CSV文件数据（包括表头）
+    dataIMU     = readmatrix(['./DataSet/UserId_',num2str(UserId),'_RowImu.csv']);
+    dataAction  = readmatrix(['./DataSet/UserId_',num2str(UserId),'_UserAction.csv']);
+    CountFeature = 1;
+    % 获取矩阵的行数
+    numRows = size(dataAction, 1);
+    for index = 1:numRows
+    % for index = 7:7
+        currentRow = dataAction(index, :);    
+        if currentRow(8) == 0
+            continue;
+        end
+        % 获取第14列的数据
+        column14 = dataIMU(:, 14);    
+        % RstStart,RstEnd
+        Rst = [];
+        Act = [];
+        Tar = [];
+        
+        
+        % 创建逻辑索引，找到满足条件的行
+        logicalIndex = column14 > currentRow(3) & column14 < currentRow(4);
+        % 使用逻辑索引筛选矩阵的行
+        Rst = dataIMU(logicalIndex, :);
+        % 创建逻辑索引，找到满足条件的行
+        logicalIndex = column14 > currentRow(5) & column14 < currentRow(6);
+        % 使用逻辑索引筛选矩阵的行
+        Act = dataIMU(logicalIndex, :);
+        % 创建逻辑索引，找到满足条件的行
+        logicalIndex = column14 > currentRow(7) & column14 < currentRow(8);
+        % 使用逻辑索引筛选矩阵的行
+        Tar = dataIMU(logicalIndex, :);
+        
+        
+        disp(['ID:',num2str(currentRow(1)),'  Round',num2str(currentRow(2))])
+    % % %     % 现在就使用一条波形的数据，就是第一条，的yaw角数据，
+        Acc_Rst = sqrt(Rst(:,1).*Rst(:,1)+Rst(:,2).*Rst(:,2)+Rst(:,3).*Rst(:,3));
+        Acc_Act = sqrt(Act(:,1).*Act(:,1)+Act(:,2).*Act(:,2)+Act(:,3).*Act(:,3));
+        Acc_Tar = sqrt(Tar(:,1).*Tar(:,1)+Tar(:,2).*Tar(:,2)+Tar(:,3).*Tar(:,3));
+        
+        for Fature_index = 1:6
+            if size(Tar,1)>1400
+                [Features_Tar(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Tar] = Calu_Feature(Tar(:,Fature_index),222);
+            else
+                disp(['False UserId:',num2str(UserId),'  Round:',num2str(currentRow(2)),' Tar Size error:',num2str(size(Tar(:,Fature_index)))])
+            end
+            
+            if size(Act,1)>200
+                [Features_Act(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Act] = Calu_Feature(Act(:,Fature_index),222);
+            else
+                disp(['False UserId:',num2str(UserId),'  Round:',num2str(currentRow(2)),' Act Size error:',num2str(size(Act(:,Fature_index)))])
+            end
+            if size(Rst,1)>1400
+                [Features_Rst(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Rst] = Calu_Feature(Rst(:,Fature_index),222);
+           else
+                disp(['False UserId:',num2str(UserId),'  Round:',num2str(currentRow(2)),' Rst Size error:',num2str(size(Rst(:,Fature_index)))])
+            end   
+        end
+    %     CountFeature = CountFeature+1;
     end
-    % 获取第14列的数据
-    column14 = dataIMU(:, 14);    
-    % RstStart,RstEnd
-    Rst = [];
-    Act = [];
-    Tar = [];
-    
-    
-    % 创建逻辑索引，找到满足条件的行
-    logicalIndex = column14 > currentRow(3) & column14 < currentRow(4);
-    % 使用逻辑索引筛选矩阵的行
-    Rst = dataIMU(logicalIndex, :);
-    % 创建逻辑索引，找到满足条件的行
-    logicalIndex = column14 > currentRow(5) & column14 < currentRow(6);
-    % 使用逻辑索引筛选矩阵的行
-    Act = dataIMU(logicalIndex, :);
-    % 创建逻辑索引，找到满足条件的行
-    logicalIndex = column14 > currentRow(7) & column14 < currentRow(8);
-    % 使用逻辑索引筛选矩阵的行
-    Tar = dataIMU(logicalIndex, :);
-    
-    
-% % %     % 现在就使用一条波形的数据，就是第一条，的yaw角数据，
-    Acc_Rst = sqrt(Rst(:,1).*Rst(:,1)+Rst(:,2).*Rst(:,2)+Rst(:,3).*Rst(:,3));
-    Acc_Act = sqrt(Act(:,1).*Act(:,1)+Act(:,2).*Act(:,2)+Act(:,3).*Act(:,3));
-    Acc_Tar = sqrt(Tar(:,1).*Tar(:,1)+Tar(:,2).*Tar(:,2)+Tar(:,3).*Tar(:,3));
-
-    for Fature_index = 1:6
-        [Features_Tar(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Tar] = Calu_Feature(Tar(:,Fature_index),222);
-        [Features_Act(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Act] = Calu_Feature(Act(:,Fature_index),222);
-        [Features_Rst(floor(currentRow(1)/90)+1,currentRow(2),UserId,Fature_index,:),After_Rst] = Calu_Feature(Rst(:,Fature_index),222);
-    end
-%     CountFeature = CountFeature+1;
-
-
 end
-
 % 均方根是均方根的平均强度（Mean Intensity，MI）：
 % 这是用来量化震颤强度的参数。
 % MI是三个轴上均方根（RMS）值的平均值。
@@ -95,6 +107,7 @@ xlabel('交互轮数序号');
 legend('intention tremor', 'res area', 'target area');
 
 
+
 % % 画图，滤波前后的信号
 % figure;
 % subplot(2,1,1)
@@ -121,122 +134,4 @@ legend('intention tremor', 'res area', 'target area');
 %     subplot(3,1,3);
 %     plot(Features_Tar(:,AGIndex,FeaIndex))
 % end
-
-
-function [Feature,bandpass_filtered_data] = Calu_Feature(acceleration_data,Fs)
-    % Example: Replace outliers with the mean of their neighbors
-    % Adjust as needed    
-    for i = 2:(length(acceleration_data) - 1)
-        if abs(acceleration_data(i)) > 500
-            acceleration_data(i) = mean([acceleration_data(i-1), acceleration_data(i+1)]);
-        end
-    end
-    
-    
-    % 示例数据
-    f1 = 4; % 高通滤波器截止频率，单位Hz
-    f2 = 12; % 低通滤波器截止频率，单位Hz
-    
-    % 示例陀螺仪数据
-    gyroscope_data = acceleration_data;
-    
-    % 设计10阶巴特沃斯高通滤波器
-    order = 10;
-    [b_high, a_high] = butter(order, f1/(Fs/2), 'high');
-    
-    % 应用高通滤波器
-    highpass_filtered_data = filter(b_high, a_high, gyroscope_data);
-    
-    % 设计10阶巴特沃斯低通滤波器
-    [b_low, a_low] = butter(order, f2/(Fs/2), 'low');
-    
-    % 应用低通滤波器
-    bandpass_filtered_data = filter(b_low, a_low, highpass_filtered_data);
-
-    %% 输出原始信号和滤波后信号
-
-    % 设置采样率
-    Fs = 222; % Hz
-    
-    % 生成示例数据（用你的实际数据替代这一部分）
-    data = bandpass_filtered_data; % 示例数据
-    
-    % 时域特征
-    mean_value = mean(data);
-    %variance = var(data);
-    mean_intensity  = mean(rms(data)); %求均方根的
-    std_deviation = std(data);
-    % 时域特征的四分位点
-    quartiles = prctile(data, [25, 50, 75]);
-    peak_value = max(data);
-    peak_to_peak = peak_value - min(data);
-    
-
-    Feature(1:8) = [mean_value,mean_intensity,quartiles,std_deviation,peak_value,peak_to_peak];
-
-%     disp('时域特征:');
-%     disp(['均值: ', num2str(mean_value)]);
-%     disp(['方差: ', num2str(variance)]);
-%     disp(['标准差: ', num2str(std_deviation)]);
-%     disp(['峰值: ', num2str(peak_value)]);%峰值（Peak Value）： 信号的峰值是信号振幅的最大值。对于周期性信号，它表示信号在一个周期内的最大正或负振幅。
-%     disp(['峰-峰值: ', num2str(peak_to_peak)]);%峰-峰值（Peak-to-Peak Value）： 信号的峰-峰值是信号振幅的峰值与最小值之间的差值。它反映了信号在一个周期内的总振幅范围，即信号从最小值到最大值的全幅范围。
-%     
-
-    % 频域特征
-    nfft = length(data);
-    frequencies = (0:nfft-1)*(Fs/nfft); % 计算频率
-    power_spectrum = abs(fft(data, nfft)).^2/nfft; % 功率谱密度
-  
-    freq_range_1 = [4, 6]; % 4Hz到6Hz
-    freq_range_2 = [4, 12]; % 6Hz到12Hz
-
-    % 找到对应的频率索引
-    freq_index_1 = frequencies >= freq_range_1(1) & frequencies <= freq_range_1(2);
-    freq_index_2 = frequencies >= freq_range_2(1) & frequencies <= freq_range_2(2);
-    
-    % 计算功率谱均值
-    power_range1 = mean(power_spectrum(freq_index_1));
-    power_range2 = mean(power_spectrum(freq_index_2));
-    
-%     disp('频域特征:');
-%     disp(['功率范围[4Hz~6Hz]: ', num2str(power_range1)]);
-%     disp(['功率范围[6Hz~12Hz]: ', num2str(power_range2)]);
-
-    % 求颤抖的主频率
-    window = hamming(256);
-    noverlap = 128;
-    nfft = 1024;
-    
-    [S, F, T] = spectrogram(data, window, noverlap, nfft, Fs);
-    
-    % 找到每个时间窗口内的主频率
-    [~, idx] = max(abs(S), [], 1);
-    dominant_frequencies = F(idx);
-    
-    % 可以根据需要选择具体的时间点，或者对整个时间序列取平均值
-    average_dominant_frequency = mean(dominant_frequencies);
-
-    Feature = [Feature,power_range1,power_range2,average_dominant_frequency];
-
-end
-
-%% 绘制原始、高通滤波和带通滤波后的数据
-% figure;
-% subplot(3,1,1);
-% plot(t, gyroscope_data);
-% title('原始陀螺仪数据');
-% xlabel('时间 (s)');
-% ylabel('角速度');
-% 
-% subplot(3,1,2);
-% plot(t, highpass_filtered_data);
-% title('经过10阶巴特沃斯高通滤波后的数据');
-% xlabel('时间 (s)');
-% ylabel('角速度');
-% 
-% subplot(3,1,3);
-% plot(t, bandpass_filtered_data);
-% title('经过10阶巴特沃斯带通滤波后的数据');
-% xlabel('时间 (s)');
-% ylabel('角速度');
 
