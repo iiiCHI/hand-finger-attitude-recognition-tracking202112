@@ -10,7 +10,7 @@ load('9位同学的特征.mat');
 % 8峰峰值，4-6hz强度，6-12hz强度、11:颤抖的主频率（Dominant Frequency of Tremor，FT）
 %12:篇度，13峰度，14，自回归系数
 %按照六轴来的，6*n个
-HumanId = 9;
+HumanId = 3;
 %%临时保存所有的特征，然后求九个人的均值。或者是求3*9=27个，都可以
 FistFea_Tar = reshape(Features_Tar(1,:,HumanId,:,:),[30,6*14]);
 SecFea_Tar = reshape(Features_Tar(2,:,HumanId,:,:),[30,6*14]);
@@ -99,60 +99,60 @@ ThrFea_Act(rowsToDelete, :) = [];
 % end
 
 
-
-%%画9和10，4-6hz和6-12hz的功率强度
-titlesName = ["加速度x轴","加速度Y轴","加速度Z轴","角速度x轴","角速度Y轴","角速度Z轴"];
-FirV = 9;
-SecV = 10;
-figure;
-for IMUindex = 1:6
-    subplot(2,3,IMUindex)
-    hold on
-    plot(FistFea_Act(:,(FirV-1)*6+IMUindex),FistFea_Act(:,(SecV-1)*6+IMUindex),'b*')    
-%     plot(FistFea_Tar(:,(FirV-1)*6+IMUindex),FistFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
-%     plot(FistFea_Rst(:,(FirV-1)*6+IMUindex),FistFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
-
-    plot(SecFea_Act(:,(FirV-1)*6+IMUindex),SecFea_Act(:,(SecV-1)*6+IMUindex),'rx')
-%     plot(SecFea_Tar(:,(FirV-1)*6+IMUindex),SecFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
-%     plot(SecFea_Rst(:,(FirV-1)*6+IMUindex),SecFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
-
-    plot(ThrFea_Act(:,(FirV-1)*6+IMUindex),ThrFea_Act(:,(SecV-1)*6+IMUindex),'g+')
-%     plot(ThrFea_Tar(:,(FirV-1)*6+IMUindex),ThrFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
-%     plot(ThrFea_Rst(:,(FirV-1)*6+IMUindex),ThrFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
-    title(titlesName(IMUindex));
-    xlabel('4-6hz');
-    ylabel('6-12hz');
-end
-% 设置图例位置
-% 自定义图例内容
-legend({'难度：5.67', '难度：4.14', '难度：3.22'}, 'Location', 'best');
 % 
-% 
-% 
-% 
-% 
-% %% 画峰度偏度图，把三个ACT的【（12-1）*6+i；（13-1）*6+i】 i表示第几个轴
+% %%画9和10，4-6hz和6-12hz的功率强度
 % titlesName = ["加速度x轴","加速度Y轴","加速度Z轴","角速度x轴","角速度Y轴","角速度Z轴"];
+% FirV = 9;
+% SecV = 10;
 % figure;
 % for IMUindex = 1:6
 %     subplot(2,3,IMUindex)
 %     hold on
-%     plot(FistFea_Act(:,(12-1)*6+IMUindex),FistFea_Act(:,(13-1)*6+IMUindex),'b*')    
-% %     plot(FistFea_Tar(:,(12-1)*6+IMUindex),FistFea_Tar(:,(13-1)*6+IMUindex),'rs')
-% %     plot(FistFea_Rst(:,(12-1)*6+IMUindex),FistFea_Rst(:,(13-1)*6+IMUindex),'gd')
+%     plot(FistFea_Act(:,(FirV-1)*6+IMUindex),FistFea_Act(:,(SecV-1)*6+IMUindex),'b*')    
+% %     plot(FistFea_Tar(:,(FirV-1)*6+IMUindex),FistFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
+% %     plot(FistFea_Rst(:,(FirV-1)*6+IMUindex),FistFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
 % 
-%     plot(SecFea_Act(:,(12-1)*6+IMUindex),SecFea_Act(:,(13-1)*6+IMUindex),'rx')
-% %     plot(SecFea_Tar(:,(12-1)*6+IMUindex),SecFea_Tar(:,(13-1)*6+IMUindex),'rs')
-% %     plot(SecFea_Rst(:,(12-1)*6+IMUindex),SecFea_Rst(:,(13-1)*6+IMUindex),'gd')
+%     plot(SecFea_Act(:,(FirV-1)*6+IMUindex),SecFea_Act(:,(SecV-1)*6+IMUindex),'rx')
+% %     plot(SecFea_Tar(:,(FirV-1)*6+IMUindex),SecFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
+% %     plot(SecFea_Rst(:,(FirV-1)*6+IMUindex),SecFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
 % 
-%     plot(ThrFea_Act(:,(12-1)*6+IMUindex),ThrFea_Act(:,(13-1)*6+IMUindex),'g+')
-% %     plot(ThrFea_Tar(:,(12-1)*6+IMUindex),ThrFea_Tar(:,(13-1)*6+IMUindex),'rs')
-% %     plot(ThrFea_Rst(:,(12-1)*6+IMUindex),ThrFea_Rst(:,(13-1)*6+IMUindex),'gd')
+%     plot(ThrFea_Act(:,(FirV-1)*6+IMUindex),ThrFea_Act(:,(SecV-1)*6+IMUindex),'g+')
+% %     plot(ThrFea_Tar(:,(FirV-1)*6+IMUindex),ThrFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
+% %     plot(ThrFea_Rst(:,(FirV-1)*6+IMUindex),ThrFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
 %     title(titlesName(IMUindex));
-%     xlabel('偏度');
-%     ylabel('峰度');
+%     xlabel('4-6hz');
+%     ylabel('6-12hz');
 % end
 % % 设置图例位置
 % % 自定义图例内容
 % legend({'难度：5.67', '难度：4.14', '难度：3.22'}, 'Location', 'best');
 % 
+% 
+% 
+% 
+% 
+%% 画峰度偏度图，把三个ACT的【（12-1）*6+i；（13-1）*6+i】 i表示第几个轴
+titlesName = ["加速度x轴","加速度Y轴","加速度Z轴","角速度x轴","角速度Y轴","角速度Z轴"];
+figure;
+for IMUindex = 1:6
+    subplot(2,3,IMUindex)
+    hold on
+    plot(FistFea_Act(:,(12-1)*6+IMUindex),FistFea_Act(:,(13-1)*6+IMUindex),'b*')    
+%     plot(FistFea_Tar(:,(12-1)*6+IMUindex),FistFea_Tar(:,(13-1)*6+IMUindex),'rs')
+%     plot(FistFea_Rst(:,(12-1)*6+IMUindex),FistFea_Rst(:,(13-1)*6+IMUindex),'gd')
+
+    plot(SecFea_Act(:,(12-1)*6+IMUindex),SecFea_Act(:,(13-1)*6+IMUindex),'rx')
+%     plot(SecFea_Tar(:,(12-1)*6+IMUindex),SecFea_Tar(:,(13-1)*6+IMUindex),'rs')
+%     plot(SecFea_Rst(:,(12-1)*6+IMUindex),SecFea_Rst(:,(13-1)*6+IMUindex),'gd')
+
+    plot(ThrFea_Act(:,(12-1)*6+IMUindex),ThrFea_Act(:,(13-1)*6+IMUindex),'g+')
+%     plot(ThrFea_Tar(:,(12-1)*6+IMUindex),ThrFea_Tar(:,(13-1)*6+IMUindex),'rs')
+%     plot(ThrFea_Rst(:,(12-1)*6+IMUindex),ThrFea_Rst(:,(13-1)*6+IMUindex),'gd')
+    title(titlesName(IMUindex));
+    xlabel('偏度');
+    ylabel('峰度');
+end
+% 设置图例位置
+% 自定义图例内容
+legend({'难度：5.67', '难度：4.14', '难度：3.22'}, 'Location', 'best');
+

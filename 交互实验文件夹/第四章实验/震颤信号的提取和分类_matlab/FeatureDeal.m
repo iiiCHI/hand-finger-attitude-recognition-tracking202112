@@ -150,17 +150,17 @@ figure;
 for IMUindex = 1:6
     subplot(2,3,IMUindex)
     hold on
-    plot(FistFea_Act(:,(FirV-1)*6+IMUindex),FistFea_Act(:,(SecV-1)*6+IMUindex),'b^')    
-    plot(FistFea_Tar(:,(FirV-1)*6+IMUindex),FistFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
-    plot(FistFea_Rst(:,(FirV-1)*6+IMUindex),FistFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
+    plot(FistFea_Act(:,(FirV-1)*6+IMUindex),FistFea_Act(:,(SecV-1)*6+IMUindex),'b*')    
+%     plot(FistFea_Tar(:,(FirV-1)*6+IMUindex),FistFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
+%     plot(FistFea_Rst(:,(FirV-1)*6+IMUindex),FistFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
 
-    plot(SecFea_Act(:,(FirV-1)*6+IMUindex),SecFea_Act(:,(SecV-1)*6+IMUindex),'b^')
-    plot(SecFea_Tar(:,(FirV-1)*6+IMUindex),SecFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
-    plot(SecFea_Rst(:,(FirV-1)*6+IMUindex),SecFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
+    plot(SecFea_Act(:,(FirV-1)*6+IMUindex),SecFea_Act(:,(SecV-1)*6+IMUindex),'rx')
+%     plot(SecFea_Tar(:,(FirV-1)*6+IMUindex),SecFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
+%     plot(SecFea_Rst(:,(FirV-1)*6+IMUindex),SecFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
 
-    plot(ThrFea_Act(:,(FirV-1)*6+IMUindex),ThrFea_Act(:,(SecV-1)*6+IMUindex),'b^')
-    plot(ThrFea_Tar(:,(FirV-1)*6+IMUindex),ThrFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
-    plot(ThrFea_Rst(:,(FirV-1)*6+IMUindex),ThrFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
+    plot(ThrFea_Act(:,(FirV-1)*6+IMUindex),ThrFea_Act(:,(SecV-1)*6+IMUindex),'g+')
+%     plot(ThrFea_Tar(:,(FirV-1)*6+IMUindex),ThrFea_Tar(:,(SecV-1)*6+IMUindex),'rs')
+%     plot(ThrFea_Rst(:,(FirV-1)*6+IMUindex),ThrFea_Rst(:,(SecV-1)*6+IMUindex),'gd')
     title(titlesName(IMUindex));
     xlabel('4-6hz');
     ylabel('6-12hz');
@@ -180,16 +180,16 @@ for IMUindex = 1:6
     subplot(2,3,IMUindex)
     hold on
     plot(FistFea_Act(:,(12-1)*6+IMUindex),FistFea_Act(:,(13-1)*6+IMUindex),'b*')    
-%     plot(FistFea_Tar(:,(12-1)*6+IMUindex),FistFea_Tar(:,(13-1)*6+IMUindex),'rs')
-%     plot(FistFea_Rst(:,(12-1)*6+IMUindex),FistFea_Rst(:,(13-1)*6+IMUindex),'gd')
+    plot(FistFea_Tar(:,(12-1)*6+IMUindex),FistFea_Tar(:,(13-1)*6+IMUindex),'rs')
+    plot(FistFea_Rst(:,(12-1)*6+IMUindex),FistFea_Rst(:,(13-1)*6+IMUindex),'gd')
 
-    plot(SecFea_Act(:,(12-1)*6+IMUindex),SecFea_Act(:,(13-1)*6+IMUindex),'rx')
-%     plot(SecFea_Tar(:,(12-1)*6+IMUindex),SecFea_Tar(:,(13-1)*6+IMUindex),'rs')
-%     plot(SecFea_Rst(:,(12-1)*6+IMUindex),SecFea_Rst(:,(13-1)*6+IMUindex),'gd')
+    plot(SecFea_Act(:,(12-1)*6+IMUindex),SecFea_Act(:,(13-1)*6+IMUindex),'b*')
+    plot(SecFea_Tar(:,(12-1)*6+IMUindex),SecFea_Tar(:,(13-1)*6+IMUindex),'rs')
+    plot(SecFea_Rst(:,(12-1)*6+IMUindex),SecFea_Rst(:,(13-1)*6+IMUindex),'gd')
 
-    plot(ThrFea_Act(:,(12-1)*6+IMUindex),ThrFea_Act(:,(13-1)*6+IMUindex),'g+')
-%     plot(ThrFea_Tar(:,(12-1)*6+IMUindex),ThrFea_Tar(:,(13-1)*6+IMUindex),'rs')
-%     plot(ThrFea_Rst(:,(12-1)*6+IMUindex),ThrFea_Rst(:,(13-1)*6+IMUindex),'gd')
+    plot(ThrFea_Act(:,(12-1)*6+IMUindex),ThrFea_Act(:,(13-1)*6+IMUindex),'b*')
+    plot(ThrFea_Tar(:,(12-1)*6+IMUindex),ThrFea_Tar(:,(13-1)*6+IMUindex),'rs')
+    plot(ThrFea_Rst(:,(12-1)*6+IMUindex),ThrFea_Rst(:,(13-1)*6+IMUindex),'gd')
     title(titlesName(IMUindex));
     xlabel('偏度');
     ylabel('峰度');
