@@ -8,6 +8,7 @@ function [Feature,bandpass_filtered_data] = Calu_Feature(acceleration_data,Fs)
         end
     end
     
+
     
     % 示例数据
     f1 = 4; % 高通滤波器截止频率，单位Hz

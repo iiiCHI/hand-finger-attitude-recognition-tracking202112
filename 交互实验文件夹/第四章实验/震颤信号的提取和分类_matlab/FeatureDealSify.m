@@ -62,13 +62,23 @@ ThrFea_Act(rowsToDelete, :) = [];
 
 
 
+
 % 设置种子
 rng(1);  % 保证结果的重复计算仍一致
 
-%% 区分三种交互意图
+%% 区分三种IAT
 data1 = FistFea_Act; 
 data2 = SecFea_Act; 
 data3 = ThrFea_Act;
+
+
+% 归一化
+
+
+% 相关性检验 《筛选特征》《真吐了----》
+
+
+
 % 合并数据和标签
 data = [data1; data2; data3];
 labels = [repmat('F', size(data1, 1), 1); repmat('S', size(data2, 1), 1); repmat('T', size(data3, 1), 1)];
@@ -145,7 +155,7 @@ disp(['Naive Bayes Accuracy: ', num2str(nbAccuracy), ', Precision: ', num2str(nb
 
 
 disp('-----------');
-%% 进行三种行为的分类
+%% 区分RT、IAT、PAT
 
 data1 = [FistFea_Act;SecFea_Act;ThrFea_Act]; 
 data2 = [FistFea_Rst;SecFea_Rst;ThrFea_Rst]; 

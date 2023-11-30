@@ -45,12 +45,7 @@ for UserId = 1:9
         % 使用逻辑索引筛选矩阵的行
         Tar = dataIMU(logicalIndex, :);
         
-        
         disp(['ID:',num2str(currentRow(1)),'  Round',num2str(currentRow(2))])
-    % % %     % 现在就使用一条波形的数据，就是第一条，的yaw角数据，
-        Acc_Rst = sqrt(Rst(:,1).*Rst(:,1)+Rst(:,2).*Rst(:,2)+Rst(:,3).*Rst(:,3));
-        Acc_Act = sqrt(Act(:,1).*Act(:,1)+Act(:,2).*Act(:,2)+Act(:,3).*Act(:,3));
-        Acc_Tar = sqrt(Tar(:,1).*Tar(:,1)+Tar(:,2).*Tar(:,2)+Tar(:,3).*Tar(:,3));
         
         for Fature_index = 1:6
             if size(Tar,1)>1400
