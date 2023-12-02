@@ -62,6 +62,11 @@ ThrFea_Act(rowsToDelete, :) = [];
 
 
 
+%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，
+% 8峰峰值，4-6hz强度，6-12hz强度、11:颤抖的主频率（Dominant Frequency of Tremor，FT）
+%12:篇度，13峰度，14，自回归系数
+%按照六轴来的，6*n个
+
 
 % 设置种子
 rng(1);  % 保证结果的重复计算仍一致
@@ -72,15 +77,44 @@ data2 = SecFea_Act;
 data3 = ThrFea_Act;
 
 
+xlables = ["Mean","RMS","Q1","Q2","Q3","SD","PV","PPV","LPSD","HPSD","FT","m3","m4","FT"];
 % 归一化
+data1 = zscore(data1);
+data2 = zscore(data2);
+data3 = zscore(data3);
 
-
+index = 0;
 % 相关性检验 《筛选特征》《真吐了----》
+AllData = [data1(:,index*14+1:index*14+14);data2(:,index*14+1:index*14+14);data3(:,index*14+1:index*14+14)];
+% AllData = [data1;data2;data3];
+% 计算斯皮尔曼等级相关系数
+rho = corr(AllData, 'type', 'Spearman');
+
+
+% 画出相关系数图
+figure;
+imagesc(rho);
+colorbar;
+title('Spearman Rank Correlation for Top 14 Features');
+xlabel('Features');
+ylabel('Features');
+% 添加相关系数标签
+[row, col] = size(rho);
+for i = 1:row
+    for j = 1:col
+        text(j, i, sprintf('%.2f', rho(i, j)), 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+    end
+end
+xticks(1:14);
+xticklabels(xlables);
+yticks(1:14);
+yticklabels(xlabels);
+
 
 
 
 % 合并数据和标签
-data = [data1; data2; data3];
+data = AllData;
 labels = [repmat('F', size(data1, 1), 1); repmat('S', size(data2, 1), 1); repmat('T', size(data3, 1), 1)];
 
 
@@ -160,6 +194,11 @@ disp('-----------');
 data1 = [FistFea_Act;SecFea_Act;ThrFea_Act]; 
 data2 = [FistFea_Rst;SecFea_Rst;ThrFea_Rst]; 
 data3 = [FistFea_Tar;SecFea_Tar;ThrFea_Tar];
+
+% 归一化
+data1 = normalize(data1);
+data2 = normalize(data2);
+data3 = normalize(data3);
 
 % 合并数据和标签
 data = [data1; data2; data3];

@@ -62,6 +62,11 @@ ThrFea_Act(rowsToDelete, :) = [];
 
 
 
+%1均值,2均方根,3-5四分位点【1，2，3】，6标准差，7峰值，
+% 8峰峰值，4-6hz强度，6-12hz强度、11:颤抖的主频率（Dominant Frequency of Tremor，FT）
+%12:篇度，13峰度，14，自回归系数
+%按照六轴来的，6*n个
+
 
 % 设置种子
 rng(1);  % 保证结果的重复计算仍一致
@@ -72,16 +77,53 @@ data2 = SecFea_Act;
 data3 = ThrFea_Act;
 
 
+xlables = ["Mean","RMS","Q1","Q2","Q3","SD","PV","PPV","LPSD","HPSD","FT","m3","m4","R"];
 % 归一化
+data1 = zscore(data1);
+data2 = zscore(data2);
+data3 = zscore(data3);
 
-
+index = 0;
 % 相关性检验 《筛选特征》《真吐了----》
+AllData = [data1(:,index*14+1:index*14+14);data2(:,index*14+1:index*14+14);data3(:,index*14+1:index*14+14)];
+% AllData = [data1;data2;data3];
 
 
+% 计算斯皮尔曼等级相关系数
+rho = corr(AllData, 'type', 'Spearman');
+
+
+% 画出相关系数图
+figure;
+imagesc(rho);
+colorbar;
+title('Spearman Rank Correlation for Top 14 Features');
+xlabel('Features');
+ylabel('Features');
+% 添加相关系数标签
+[row, col] = size(rho);
+for i = 1:row
+    for j = 1:col
+        text(j, i, sprintf('%.2f', rho(i, j)), 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+    end
+end
+xticks(1:14);
+xticklabels(xlables);
+yticks(1:14);
+yticklabels(xlables);
 
 % 合并数据和标签
 data = [data1; data2; data3];
 labels = [repmat('F', size(data1, 1), 1); repmat('S', size(data2, 1), 1); repmat('T', size(data3, 1), 1)];
+
+%% 列出要删除的特征，删除10和14
+columns_to_delete = [];
+for index_delete = 0:5
+    columns_to_delete = [columns_to_delete,10+index_delete*14,14+index_delete*14];
+end
+data(:,columns_to_delete) = [];
+
+
 
 
 % 随机打乱数据
@@ -98,57 +140,60 @@ trainLabels = labels(1:splitIdx, :);
 testData = data(splitIdx+1:end, :);
 testLabels = labels(splitIdx+1:end, :);
 
-% 分类和计算准确率，F1分数，召回率
-% 计算分类器模型
-% 使用支持向量机（SVM）进行分类
-svmModel = fitcecoc(trainData, trainLabels);
-svmPredictions = predict(svmModel, testData);
+% 使用交叉验证进行模型训练和评估
+numFolds = 5; % 5折交叉验证
+cv = cvpartition(size(trainData, 1), 'KFold', numFolds);
 
-% 使用k最近邻（KNN）进行分类
-knnModel = fitcknn(trainData, trainLabels);
-knnPredictions = predict(knnModel, testData);
+% 存储每个模型的评估指标
+svmMetrics = zeros(numFolds, 4);
+knnMetrics = zeros(numFolds, 4);
+treeMetrics = zeros(numFolds, 4);
+nbMetrics = zeros(numFolds, 4);
 
-% 使用决策树进行分类
-treeModel = fitctree(trainData, trainLabels);
-treePredictions = predict(treeModel, testData);
+for fold = 1:numFolds
+    % 获取当前交叉验证的训练和测试集
+    trainIndices = training(cv, fold);
+    testIndices = test(cv, fold);
 
-% 使用朴素贝叶斯进行分类
-nbModel = fitcnb(trainData, trainLabels);
-nbPredictions = predict(nbModel, testData);
+    foldTrainData = trainData(trainIndices, :);
+    foldTrainLabels = trainLabels(trainIndices, :);
+    foldTestData = trainData(testIndices, :);
+    foldTestLabels = trainLabels(testIndices, :);
 
-% 计算混淆矩阵
-svmConfusionMat = confusionmat(testLabels, svmPredictions);
-knnConfusionMat = confusionmat(testLabels, knnPredictions);
-treeConfusionMat = confusionmat(testLabels, treePredictions);
-nbConfusionMat = confusionmat(testLabels, nbPredictions);
+    % 使用支持向量机（SVM）进行分类
+    svmModel = fitcecoc(foldTrainData, foldTrainLabels);
+    svmPredictions = predict(svmModel, foldTestData);
+    svmMetrics(fold, :) = calculateMetrics(foldTestLabels, svmPredictions);
 
-% 计算准确度、F1分数和召回率
-svmAccuracy = sum(diag(svmConfusionMat)) / sum(svmConfusionMat(:));
-svmPrecision = svmConfusionMat(2, 2) / sum(svmConfusionMat(:, 2));
-svmRecall = svmConfusionMat(2, 2) / sum(svmConfusionMat(2, :));
-svmF1Score = 2 * (svmPrecision * svmRecall) / (svmPrecision + svmRecall);
+    % 使用k最近邻（KNN）进行分类
+    knnModel = fitcknn(foldTrainData, foldTrainLabels);
+    knnPredictions = predict(knnModel, foldTestData);
+    knnMetrics(fold, :) = calculateMetrics(foldTestLabels, knnPredictions);
 
-knnAccuracy = sum(diag(knnConfusionMat)) / sum(knnConfusionMat(:));
-knnPrecision = knnConfusionMat(2, 2) / sum(knnConfusionMat(:, 2));
-knnRecall = knnConfusionMat(2, 2) / sum(knnConfusionMat(2, :));
-knnF1Score = 2 * (knnPrecision * knnRecall) / (knnPrecision + knnRecall);
+    % 使用决策树进行分类
+    treeModel = fitctree(foldTrainData, foldTrainLabels);
+    treePredictions = predict(treeModel, foldTestData);
+    treeMetrics(fold, :) = calculateMetrics(foldTestLabels, treePredictions);
 
-treeAccuracy = sum(diag(treeConfusionMat)) / sum(treeConfusionMat(:));
-treePrecision = treeConfusionMat(2, 2) / sum(treeConfusionMat(:, 2));
-treeRecall = treeConfusionMat(2, 2) / sum(treeConfusionMat(2, :));
-treeF1Score = 2 * (treePrecision * treeRecall) / (treePrecision + treeRecall);
+    % 使用朴素贝叶斯进行分类
+    nbModel = fitcnb(foldTrainData, foldTrainLabels);
+    nbPredictions = predict(nbModel, foldTestData);
+    nbMetrics(fold, :) = calculateMetrics(foldTestLabels, nbPredictions);
+end
 
-nbAccuracy = sum(diag(nbConfusionMat)) / sum(nbConfusionMat(:));
-nbPrecision = nbConfusionMat(2, 2) / sum(nbConfusionMat(:, 2));
-nbRecall = nbConfusionMat(2, 2) / sum(nbConfusionMat(2, :));
-nbF1Score = 2 * (nbPrecision * nbRecall) / (nbPrecision + nbRecall);
-
+% 计算每个模型的平均评估指标
+svmAverageMetrics = mean(svmMetrics, 1);
+knnAverageMetrics = mean(knnMetrics, 1);
+treeAverageMetrics = mean(treeMetrics, 1);
+nbAverageMetrics = mean(nbMetrics, 1);
 
 % 显示结果
-disp(['SVM Accuracy: ', num2str(svmAccuracy), ', Precision: ', num2str(svmPrecision), ', Recall: ', num2str(svmRecall), ', F1 Score: ', num2str(svmF1Score)]);
-disp(['KNN Accuracy: ', num2str(knnAccuracy), ', Precision: ', num2str(knnPrecision), ', Recall: ', num2str(knnRecall), ', F1 Score: ', num2str(knnF1Score)]);
-disp(['Decision Tree Accuracy: ', num2str(treeAccuracy), ', Precision: ', num2str(treePrecision), ', Recall: ', num2str(treeRecall), ', F1 Score: ', num2str(treeF1Score)]);
-disp(['Naive Bayes Accuracy: ', num2str(nbAccuracy), ', Precision: ', num2str(nbPrecision), ', Recall: ', num2str(nbRecall), ', F1 Score: ', num2str(nbF1Score)]);
+disp(['SVM Average Accuracy: ', num2str(svmAverageMetrics(1)), ', Precision: ', num2str(svmAverageMetrics(2)), ', Recall: ', num2str(svmAverageMetrics(3)), ', F1 Score: ', num2str(svmAverageMetrics(4))]);
+disp(['KNN Average Accuracy: ', num2str(knnAverageMetrics(1)), ', Precision: ', num2str(knnAverageMetrics(2)), ', Recall: ', num2str(knnAverageMetrics(3)), ', F1 Score: ', num2str(knnAverageMetrics(4))]);
+disp(['Decision Tree Average Accuracy: ', num2str(treeAverageMetrics(1)), ', Precision: ', num2str(treeAverageMetrics(2)), ', Recall: ', num2str(treeAverageMetrics(3)), ', F1 Score: ', num2str(treeAverageMetrics(4))]);
+disp(['Naive Bayes Average Accuracy: ', num2str(nbAverageMetrics(1)), ', Precision: ', num2str(nbAverageMetrics(2)), ', Recall: ', num2str(nbAverageMetrics(3)), ', F1 Score: ', num2str(nbAverageMetrics(4))]);
+
+
 
 
 
@@ -161,9 +206,57 @@ data1 = [FistFea_Act;SecFea_Act;ThrFea_Act];
 data2 = [FistFea_Rst;SecFea_Rst;ThrFea_Rst]; 
 data3 = [FistFea_Tar;SecFea_Tar;ThrFea_Tar];
 
+% 归一化
+data1 = normalize(data1);
+data2 = normalize(data2);
+data3 = normalize(data3);
+
+
+index = 0;
+% 相关性检验 《筛选特征》《真吐了----》
+AllData = [data1(:,index*14+1:index*14+14);data2(:,index*14+1:index*14+14);data3(:,index*14+1:index*14+14)];
+% AllData = [data1;data2;data3];
+
+
+% 计算斯皮尔曼等级相关系数
+rho = corr(AllData, 'type', 'Spearman');
+
+
+% 画出相关系数图
+figure;
+imagesc(rho);
+colorbar;
+title('Spearman Rank Correlation for Top 14 Features');
+xlabel('Features');
+ylabel('Features');
+% 添加相关系数标签
+[row, col] = size(rho);
+for i = 1:row
+    for j = 1:col
+        text(j, i, sprintf('%.2f', rho(i, j)), 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+    end
+end
+xticks(1:14);
+xticklabels(xlables);
+yticks(1:14);
+yticklabels(xlables);
+
+
+
+
 % 合并数据和标签
 data = [data1; data2; data3];
 labels = [repmat('F', size(data1, 1), 1); repmat('S', size(data2, 1), 1); repmat('T', size(data3, 1), 1)];
+
+
+%% 列出要删除的特征，删除10和14
+columns_to_delete = [];
+for index_delete = 0:5
+    columns_to_delete = [columns_to_delete,7+index_delete*14,14+index_delete*14];
+end
+data(:,columns_to_delete) = [];
+
+
 
 
 % 随机打乱数据
@@ -180,57 +273,65 @@ trainLabels = labels(1:splitIdx, :);
 testData = data(splitIdx+1:end, :);
 testLabels = labels(splitIdx+1:end, :);
 
-% 分类和计算准确率，F1分数，召回率
+% 使用交叉验证进行模型训练和评估
+numFolds = 5; % 5折交叉验证
+cv = cvpartition(size(trainData, 1), 'KFold', numFolds);
 
-% 使用支持向量机（SVM）进行分类
-svmModel = fitcecoc(trainData, trainLabels);
-% 使用k最近邻（KNN）进行分类
-knnModel = fitcknn(trainData, trainLabels);
-% 使用决策树进行分类
-treeModel = fitctree(trainData, trainLabels);
-% 使用朴素贝叶斯进行分类
-nbModel = fitcnb(trainData, trainLabels);
-% 使用支持向量机（SVM）进行分类
-svmPredictions = predict(svmModel, testData);
-% 使用k最近邻（KNN）进行分类
-knnPredictions = predict(knnModel, testData);
-% 使用决策树进行分类
-treePredictions = predict(treeModel, testData);
-% 使用朴素贝叶斯进行分类
-nbPredictions = predict(nbModel, testData);
+% 存储每个模型的评估指标
+svmMetrics = zeros(numFolds, 4);
+knnMetrics = zeros(numFolds, 4);
+treeMetrics = zeros(numFolds, 4);
+nbMetrics = zeros(numFolds, 4);
 
-% 计算混淆矩阵
-svmConfusionMat = confusionmat(testLabels, svmPredictions);
-knnConfusionMat = confusionmat(testLabels, knnPredictions);
-treeConfusionMat = confusionmat(testLabels, treePredictions);
-nbConfusionMat = confusionmat(testLabels, nbPredictions);
+for fold = 1:numFolds
+    % 获取当前交叉验证的训练和测试集
+    trainIndices = training(cv, fold);
+    testIndices = test(cv, fold);
 
-% 计算准确度、F1分数和召回率
-svmAccuracy = sum(diag(svmConfusionMat)) / sum(svmConfusionMat(:));
-svmPrecision = svmConfusionMat(2, 2) / sum(svmConfusionMat(:, 2));
-svmRecall = svmConfusionMat(2, 2) / sum(svmConfusionMat(2, :));
-svmF1Score = 2 * (svmPrecision * svmRecall) / (svmPrecision + svmRecall);
+    foldTrainData = trainData(trainIndices, :);
+    foldTrainLabels = trainLabels(trainIndices, :);
+    foldTestData = trainData(testIndices, :);
+    foldTestLabels = trainLabels(testIndices, :);
 
-knnAccuracy = sum(diag(knnConfusionMat)) / sum(knnConfusionMat(:));
-knnPrecision = knnConfusionMat(2, 2) / sum(knnConfusionMat(:, 2));
-knnRecall = knnConfusionMat(2, 2) / sum(knnConfusionMat(2, :));
-knnF1Score = 2 * (knnPrecision * knnRecall) / (knnPrecision + knnRecall);
+    % 使用支持向量机（SVM）进行分类
+    svmModel = fitcecoc(foldTrainData, foldTrainLabels);
+    svmPredictions = predict(svmModel, foldTestData);
+    svmMetrics(fold, :) = calculateMetrics(foldTestLabels, svmPredictions);
 
-treeAccuracy = sum(diag(treeConfusionMat)) / sum(treeConfusionMat(:));
-treePrecision = treeConfusionMat(2, 2) / sum(treeConfusionMat(:, 2));
-treeRecall = treeConfusionMat(2, 2) / sum(treeConfusionMat(2, :));
-treeF1Score = 2 * (treePrecision * treeRecall) / (treePrecision + treeRecall);
+    % 使用k最近邻（KNN）进行分类
+    knnModel = fitcknn(foldTrainData, foldTrainLabels);
+    knnPredictions = predict(knnModel, foldTestData);
+    knnMetrics(fold, :) = calculateMetrics(foldTestLabels, knnPredictions);
 
-nbAccuracy = sum(diag(nbConfusionMat)) / sum(nbConfusionMat(:));
-nbPrecision = nbConfusionMat(2, 2) / sum(nbConfusionMat(:, 2));
-nbRecall = nbConfusionMat(2, 2) / sum(nbConfusionMat(2, :));
-nbF1Score = 2 * (nbPrecision * nbRecall) / (nbPrecision + nbRecall);
+    % 使用决策树进行分类
+    treeModel = fitctree(foldTrainData, foldTrainLabels);
+    treePredictions = predict(treeModel, foldTestData);
+    treeMetrics(fold, :) = calculateMetrics(foldTestLabels, treePredictions);
 
+    % 使用朴素贝叶斯进行分类
+    nbModel = fitcnb(foldTrainData, foldTrainLabels);
+    nbPredictions = predict(nbModel, foldTestData);
+    nbMetrics(fold, :) = calculateMetrics(foldTestLabels, nbPredictions);
+end
+
+% 计算每个模型的平均评估指标
+svmAverageMetrics = mean(svmMetrics, 1);
+knnAverageMetrics = mean(knnMetrics, 1);
+treeAverageMetrics = mean(treeMetrics, 1);
+nbAverageMetrics = mean(nbMetrics, 1);
 
 % 显示结果
-disp(['SVM Accuracy: ', num2str(svmAccuracy), ', Precision: ', num2str(svmPrecision), ', Recall: ', num2str(svmRecall), ', F1 Score: ', num2str(svmF1Score)]);
-disp(['KNN Accuracy: ', num2str(knnAccuracy), ', Precision: ', num2str(knnPrecision), ', Recall: ', num2str(knnRecall), ', F1 Score: ', num2str(knnF1Score)]);
-disp(['Decision Tree Accuracy: ', num2str(treeAccuracy), ', Precision: ', num2str(treePrecision), ', Recall: ', num2str(treeRecall), ', F1 Score: ', num2str(treeF1Score)]);
-disp(['Naive Bayes Accuracy: ', num2str(nbAccuracy), ', Precision: ', num2str(nbPrecision), ', Recall: ', num2str(nbRecall), ', F1 Score: ', num2str(nbF1Score)]);
+disp(['SVM Average Accuracy: ', num2str(svmAverageMetrics(1)), ', Precision: ', num2str(svmAverageMetrics(2)), ', Recall: ', num2str(svmAverageMetrics(3)), ', F1 Score: ', num2str(svmAverageMetrics(4))]);
+disp(['KNN Average Accuracy: ', num2str(knnAverageMetrics(1)), ', Precision: ', num2str(knnAverageMetrics(2)), ', Recall: ', num2str(knnAverageMetrics(3)), ', F1 Score: ', num2str(knnAverageMetrics(4))]);
+disp(['Decision Tree Average Accuracy: ', num2str(treeAverageMetrics(1)), ', Precision: ', num2str(treeAverageMetrics(2)), ', Recall: ', num2str(treeAverageMetrics(3)), ', F1 Score: ', num2str(treeAverageMetrics(4))]);
+disp(['Naive Bayes Average Accuracy: ', num2str(nbAverageMetrics(1)), ', Precision: ', num2str(nbAverageMetrics(2)), ', Recall: ', num2str(nbAverageMetrics(3)), ', F1 Score: ', num2str(nbAverageMetrics(4))]);
 
-
+% 定义函数计算评估指标
+function metrics = calculateMetrics(trueLabels, predictedLabels)
+    confusionMat = confusionmat(trueLabels, predictedLabels);
+    accuracy = sum(diag(confusionMat)) / sum(confusionMat(:));
+    precision = confusionMat(2, 2) / sum(confusionMat(:, 2));
+    recall = confusionMat(2, 2) / sum(confusionMat(2, :));
+    f1Score = 2 * (precision * recall) / (precision + recall);
+    metrics = [accuracy, precision, recall, f1Score];
+end
