@@ -1,0 +1,16 @@
+-----第一种难度------30
+SVM Average Accuracy: 0.28399, Precision: 0.21214, Recall: 0.27682, F1 Score: 0.22686
+KNN Average Accuracy: 0.74451, Precision: 0.71469, Recall: 0.79953, F1 Score: 0.74471
+Decision Tree Average Accuracy: 0.92273, Precision: 0.91521, Recall: 0.91067, F1 Score: 0.91271
+Naive Bayes Average Accuracy: 0.28698, Precision: 0.15143, Recall: 0.38736, F1 Score: NaN
+-----第二种难度------90
+SVM Average Accuracy: 0.26787, Precision: 0.255, Recall: 0.23915, F1 Score: 0.238
+KNN Average Accuracy: 0.80837, Precision: 0.79935, Recall: 0.81445, F1 Score: 0.79883
+Decision Tree Average Accuracy: 0.90656, Precision: 0.91519, Recall: 0.93365, F1 Score: 0.92415
+Naive Bayes Average Accuracy: 0.49387, Precision: 0.40822, Recall: 0.44279, F1 Score: 0.41112
+-----第三种难度------180
+SVM Average Accuracy: 0.35408, Precision: 0.34803, Recall: 0.35582, F1 Score: 0.3368
+KNN Average Accuracy: 0.80837, Precision: 0.84065, Recall: 0.78022, F1 Score: 0.79284
+Decision Tree Average Accuracy: 0.95363, Precision: 0.94615, Recall: 0.97442, F1 Score: 0.95986
+Naive Bayes Average Accuracy: 0.39419, Precision: 0.45025, Recall: 0.48647, F1 Score: 0.41851
+>> 

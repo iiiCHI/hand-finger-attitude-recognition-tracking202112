@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类结果柱状图</title>
+    <!-- 引入 ECharts 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.0.2/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- ECharts 图表容器 -->
+    <div id="chart" style="width: 800px; height: 400px;"></div>
+
+    <script>
+        // 准备数据
+        var legends = ['高', '中', '低'];
+        var metrics = ['Accuracy', 'F1 Score', 'Recall'];
+
+        var data = [
+            [0.92273, 0.91521, 0.91067],
+            [0.90656, 0.91519, 0.93365],
+            [0.95363, 0.94615, 0.97442]
+        ];
+
+        // 初始化 ECharts 实例
+        var myChart = echarts.init(document.getElementById('chart'));
+
+        // 配置项
+        var option = {
+            title: {
+                text: ' '
+            },
+            legend: {
+                data: legends
+            },
+            xAxis: {
+                type: 'category',
+                data: metrics
+            },
+            yAxis: {
+                type: 'value',
+                min: 0,
+                max: 1
+            },
+            series: []
+        };
+
+        // 添加数据
+        for (var i = 0; i < legends.length; i++) {
+            option.series.push({
+                name: legends[i],
+                type: 'bar',
+                data: data[i]
+            });
+        }
+
+        // 使用配置项设置图表
+        myChart.setOption(option);
+    </script>
+</body>
+</html>
