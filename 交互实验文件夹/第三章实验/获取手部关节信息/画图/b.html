@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ECharts 折线图示例</title>
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- 包含图表的容器 -->
+    <div id="chart" style="width: 800px; height: 400px;"></div>
+
+    <script>
+        // 使用 Fetch API 读取 CSV 文件
+        fetch('./example.csv')
+            .then(response => response.text())
+            .then(data => {
+                // 解析 CSV 数据并绘制图表
+                drawChart(data);
+            });
+
+        function drawChart(csvData) {
+            const lines = csvData.trim().split('\n');
+            const headers = lines[0].split(',');
+            const seriesData = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                const date = values[0];
+                const data = values.slice(1).map(Number);
+                seriesData.push({
+                    name: headers[i],
+                    type: 'line',
+                    data: data,
+                });
+            }
+
+            const chart = echarts.init(document.getElementById('chart'));
+            const option = {
+                title: {
+                    text: '折线图示例',
+                },
+                xAxis: {
+                    type: 'category',
+                    data: seriesData[0].data.map((_, i) => headers[0]),
+                },
+                yAxis: {
+                    type: 'value',
+                },
+                series: seriesData,
+            };
+            chart.setOption(option);
+        }
+    </script>
+</body>
+</html>
