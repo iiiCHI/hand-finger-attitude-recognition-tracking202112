@@ -16,5 +16,15 @@ namespace iGestureGlove
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            MessageBox.Show("数据接入成功！","串口连接",MessageBoxButtons.OK,MessageBoxIcon.None);
+        }
     }
 }

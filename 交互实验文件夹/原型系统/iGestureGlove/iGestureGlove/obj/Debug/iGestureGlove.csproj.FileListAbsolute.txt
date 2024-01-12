@@ -1,0 +1,11 @@
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\bin\Debug\iGestureGlove.exe.config
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\bin\Debug\iGestureGlove.exe
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\bin\Debug\iGestureGlove.pdb
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.csproj.AssemblyReference.cache
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.Form1.resources
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.Properties.Resources.resources
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.csproj.GenerateResource.cache
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.csproj.CoreCompileInputs.cache
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.exe
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.pdb
+E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.InterAction.resources
