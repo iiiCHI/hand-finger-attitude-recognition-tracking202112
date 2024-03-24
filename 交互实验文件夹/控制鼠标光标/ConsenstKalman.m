@@ -7,7 +7,8 @@ import java.awt.Point;
 import java.awt.event.InputEvent;
 
 
-addpath('D:\MATLAB\WorkSpace\MaYongWei\无线传输代码\');
+%addpath('D:\MATLAB\WorkSpace\MaYongWei\无线传输代码\');
+addpath('E:\WorkSpace\MaYongWei\无线传输代码\');
 close all;                          % close all figures
 clear;                              % clear all variables
 clc;                                % clear the command terminal
