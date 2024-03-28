@@ -40,8 +40,15 @@ PreX = [1,0,0,0];%用来保存上一时刻的姿态的
 window_size = 3;
 windowX = zeros(1, window_size); % 五行四列的X，
 windowY = zeros(1, window_size); % 五行四列的Y，
-IsInClickDown = false;
 
+%% 震颤相关
+TremorRow = [];
+FilterTremor = [];
+
+%% 决策树手势识别相关
+GestureId = 1;% 1：张开、2：点选、3：抓取、4：旋转、5：缩放
+% r = robot;
+PreZoom = 0;
 
 %% 绘制可视化图形的初始化操作
 % %% 简约三指构型可视化
@@ -120,7 +127,8 @@ end
 %legend('Q1','Q2','Q3','Q4');
 axis([0,Axis_num,-1,1])
 
-
+figure (8);
+set (gcf,'Position',[500,500,1400,900], 'color','w')
 
 % 获取当前打开的所有 figure
 figs = findobj('Type', 'figure');
@@ -227,6 +235,7 @@ while true
                 m(3,N) = -(Input(N*9-9+9)-NiheA(3,N))*NiheA(6,N)*(1e-3);
                 m(:,N) = m(:,N)./norm(m(:,N));
             end
+            TremorRow = [TremorRow;[a(:,4)',g(:,4)']];
             deltatTime = Input(IMU_num*9+1);%这个地方改了，变成秒
             %% 单个IMU姿态求解        
             [X_k,P_k] = Func_getSingleIMUattitude(X_k,P_k,a,m,g,deltatTime,Sigma_g,Sigma_u,IMU_num);%%这个是更新的。
@@ -245,44 +254,58 @@ while true
             Hand_posture(5*4-3:5*4) = Func_getJointPosture(X_k,6,5);%食指内关节
             Hand_posture(6*4-3:6*4) = Func_getJointPosture(X_k,7,8);%中指外关节
             Hand_posture(7*4-3:7*4) = Func_getJointPosture(X_k,6,7);%中指内关节
-            %% 控制光标            
+            %% 移动控制控制光标            
             funcControlMouse(Func_crossProductFu(Hand_posture(1:4),PreX)')
-            %% 判断是否进入命令，执行相应的指令。
+            %% 决策树进行指令识别。
 %             if ~IsInClickDown && func_MeetCondition(Hand_posture(2*4-3:2*4),2,[0.5,1]) && func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0.5,1])
-            if ~IsInClickDown && func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0.5,1])
-                funcControlMouseClickDown()
-                IsInClickDown=true;
-                funcControlMouseClickUp()
-            end
-%             if IsInClickDown&& func_MeetCondition(Hand_posture(2*4-3:2*4),2,[0,0.5]) || func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0,0.5])
-            if IsInClickDown&& func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0,0.5])
-                IsInClickDown=false;
-            end
+            funcTree(Hand_posture);
             PreX = Hand_posture(1:4);
 
-
-        %% 可视化
-        % 简约三指构型可视化
-        Func_ShowHand(X_k',ha1,hi1,hi2,ha2,hm1,hm2,ht0,ht1,ht2,1)
-
-        for N = 1:4
-            %查看输出关节姿态的
-%             addpoints(h(N),indexNumber,Hand_posture(N));
-            addpoints(h2(N),count,Hand_posture(1*4+N));
-            addpoints(h3(N),count,Hand_posture(2*4+N));
-            addpoints(h4(N),count,Hand_posture(3*4+N));
-            addpoints(h5(N),count,Hand_posture(4*4+N));
-            addpoints(h6(N),count,Hand_posture(5*4+N));
-            addpoints(h7(N),count,Hand_posture(6*4+N));
-        end
-        if mod(count,Axis_num) == 0
-            for N = 2:7
-                figure (N);
-    %             axis([indexNumber-500,indexNumber,-1,1])
-                axis([floor(count/Axis_num)*Axis_num,Axis_num*(1+floor(count/Axis_num)),-1,1])
-            end
-        end
-        drawnow limitrate nocallbacks
+%         %% 可视化
+%         % 简约三指构型可视化
+%         Func_ShowHand(X_k',ha1,hi1,hi2,ha2,hm1,hm2,ht0,ht1,ht2,1)
+% 
+%         for N = 1:4
+%             %查看输出关节姿态的
+% %             addpoints(h(N),indexNumber,Hand_posture(N));
+%             addpoints(h2(N),count,Hand_posture(1*4+N));
+%             addpoints(h3(N),count,Hand_posture(2*4+N));
+%             addpoints(h4(N),count,Hand_posture(3*4+N));
+%             addpoints(h5(N),count,Hand_posture(4*4+N));
+%             addpoints(h6(N),count,Hand_posture(5*4+N));
+%             addpoints(h7(N),count,Hand_posture(6*4+N));
+%         end
+%         if mod(count,Axis_num) == 0
+%             for N = 2:7
+%                 figure (N);
+%     %             axis([indexNumber-500,indexNumber,-1,1])
+%                 axis([floor(count/Axis_num)*Axis_num,Axis_num*(1+floor(count/Axis_num)),-1,1])
+%             end
+%         end
+% 
+%         %% 输出震颤信息
+%         if mod(count,100) == 0
+%             FilterTremor = ones(size(TremorRow,1),6);
+%             funcFilter(TremorRow)
+%             titlesIndex = ["加速度计x轴","加速度计y轴","加速度计z轴","陀螺仪x轴","陀螺仪y轴","陀螺仪z轴"];
+%             ylablesSet = ["加速度(m/s^2)","角速度(deg/s)"];
+%             figure(8);
+%             clf;
+%             Row = TremorRow;
+%             AfRow = FilterTremor;
+%             for i = 1:6
+%                 subplot(2,3,i)
+%                 plot((1:size(Row(:,i),1))/222,Row(:,i))
+%                 hold on
+%                 plot((1:size(Row(:,i),1))/222,AfRow(:,i))
+%                 xlabel("时间(s)")
+%                 ylabel(ylablesSet(floor(i/4)+1))
+%                 title(titlesIndex(i))
+%             end
+%             legend("滤波前信号","滤波后信号")
+%             TremorRow = [];
+%         end
+%         drawnow limitrate nocallbacks
 
         %% 数据保存
 %             t = posixtime(datetime('now', 'TimeZone', 'UTC')) * 1000;
@@ -355,14 +378,123 @@ function funcControlMouse(q_hand)
 end
 
 
-function funcControlMouseClickDown()
-    robot.mousePress(InputEvent.BUTTON1_MASK);
-end
+    function funcControlMouseClickDown()
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+    end
+    
+    
+    function funcControlMouseClickUp()
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+    end
 
 
-function funcControlMouseClickUp()
-    robot.mouseRelease(InputEvent.BUTTON1_MASK);
-end
+    function funcTree(Hand_posture)
+%%   决策树模型，用于识别手势的，1手2拇外3拇内4食外5食内6中外7中内    
+% GestureId = 1;% 1：张开、2：点选、3：抓取、4：旋转、5：缩放
+        if GestureId~=1
+            % 如果不是张开状态，则只能转化为张开状态。
+            if func_MeetCondition(Hand_posture(4*4-3:4*4),2,[-0.5,0.5])&&func_MeetCondition(Hand_posture(6*4-3:6*4),2,[-0.5,0.5])
+                GestureId = 1;
+                disp("执行张开指令");
+                % 释放所有键盘按键
+                robot.keyRelease(java.awt.event.KeyEvent.VK_R);
+                funcControlMouseClickUp()
+            end
+            % 还有就是如果是缩放，还要进行食指/拇指的判断、
+            if GestureId == 5
+                % 判断相较于前一个数值是增加还是减少了，增加就执行放大指令缩小就执行缩小指令
+                if PreZoom>Hand_posture(5*4-2)
+                    %执行放大功能
+                    disp("执行放大指令");
+                    robot.keyPress(java.awt.event.KeyEvent.VK_Z);
+                    robot.keyRelease(java.awt.event.KeyEvent.VK_Z);
+                else 
+                    %执行缩小功能
+                    disp("执行缩小指令");
+                    robot.keyPress(java.awt.event.KeyEvent.VK_X);
+                    robot.keyRelease(java.awt.event.KeyEvent.VK_X);
+                end
+                PreZoom = Hand_posture(5*4-2);
+            end
+        else
+            % 如果是张开阶段，那么需要构建决策树
+            % 判断食指是否弯曲
+            if func_MeetCondition(Hand_posture(4*4-3:4*4),2,[0.5,1])
+                %如果弯曲 则判断拇指是否弯曲
+                if func_MeetCondition(Hand_posture(2*4-3:2*4),2,[0.5,1])
+                    %如果中指弯曲，则判断食指的关节是否均弯曲
+                    if func_MeetCondition(Hand_posture(5*4-3:5*4),2,[0.5,1])
+                        %如果弯曲，则为抓取
+                        disp("执行抓取指令");
+                        funcControlMouseClickDown()
+                        GestureId = 3;
+                    else
+                        %否则为旋转
+                        robot.keyPress(java.awt.event.KeyEvent.VK_R);
+                        disp("执行旋转指令");
+                        GestureId = 4;
+                    end
+                else
+                    %否则为点选
+                    funcControlMouseClickDown()
+                    funcControlMouseClickUp()
+                    GestureId = 2;
+                    disp("执行点选指令");
+                end
+            else
+                % 如果不弯曲，则判断中指
+                if func_MeetCondition(Hand_posture(6*4-3:6*4),2,[0.5,1])
+                    %如果中指弯曲，则为缩放
+                    disp("执行缩放指令");
+                    PreZoom = Hand_posture(5*4-2);
+                    GestureId = 5;
+                else
+                    if GestureId~=1
+                        disp("执行张开指令");
+                    end
+                    GestureId = 1;
+                    %否则为平移
+                end
+            end
+% 1手2拇外3拇内4食外5食内6中外7中内    
+        end
+    end
+
+
+    function funcFilter(dataIMU)
+        %% 进行滤波
+        % Example: Replace outliers with the mean of their neighbors
+        for j = 1:6
+            % Adjust as needed    
+            for i = 2:(length(dataIMU(:,j)) - 1)
+                if j<=3 && abs(dataIMU(i,j)-dataIMU(i-1,j)) > 1 && abs(dataIMU(i,j)-dataIMU(i+1,j)) > 1
+                    dataIMU(i,j) = mean([dataIMU(i-1,j), dataIMU(i+1,j)]);
+                elseif abs(dataIMU(i,j)-dataIMU(i-1,j)) > 10 && abs(dataIMU(i,j)-dataIMU(i+1,j)) > 10
+                    dataIMU(i,j) = mean([dataIMU(i-1,j), dataIMU(i+1,j)]);
+                end
+            end
+        
+            % 示例数据
+            f1 = 4; % 高通滤波器截止频率，单位Hz
+            f2 = 12; % 低通滤波器截止频率，单位Hz
+            Fs = 222;
+            % 示例陀螺仪数据
+            gyroscope_data = dataIMU(:,j);
+            
+            % 设计10阶巴特沃斯高通滤波器
+            order = 10;
+            [b_high, a_high] = butter(order, f1/(Fs/2), 'high');
+            
+            % 应用高通滤波器
+            highpass_filtered_data = filter(b_high, a_high, gyroscope_data);
+            
+            % 设计10阶巴特沃斯低通滤波器
+            [b_low, a_low] = butter(order, f2/(Fs/2), 'low');
+            
+            % 应用低通滤波器
+            FilterTremor(:,j) = filter(b_low, a_low, highpass_filtered_data);
+        end
+    end
 
 end
 

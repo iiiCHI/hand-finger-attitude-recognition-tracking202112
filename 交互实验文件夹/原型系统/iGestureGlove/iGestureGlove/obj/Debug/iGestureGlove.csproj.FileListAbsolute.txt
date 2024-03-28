@@ -9,3 +9,14 @@ E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型�
 E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.exe
 E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.pdb
 E:\hand-finger-attitude-recognition-tracking202112\交互实验文件夹\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.InterAction.resources
+F:\原型系统\iGestureGlove\iGestureGlove\bin\Debug\iGestureGlove.exe.config
+F:\原型系统\iGestureGlove\iGestureGlove\bin\Debug\iGestureGlove.exe
+F:\原型系统\iGestureGlove\iGestureGlove\bin\Debug\iGestureGlove.pdb
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.csproj.AssemblyReference.cache
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.Form1.resources
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.InterAction.resources
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.Properties.Resources.resources
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.csproj.GenerateResource.cache
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.csproj.CoreCompileInputs.cache
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.exe
+F:\原型系统\iGestureGlove\iGestureGlove\obj\Debug\iGestureGlove.pdb
